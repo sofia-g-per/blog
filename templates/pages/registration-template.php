@@ -9,46 +9,46 @@
         <div class="form__text-inputs">
           <div class="registration__input-wrapper form__input-wrapper">
             <label class="registration__label form__label" for="registration-email">Электронная почта <span class="form__input-required">*</span></label>
-            <div class="form__input-section">
-              <input class="registration__input form__input" id="registration-email" type="email" name="email" placeholder="Укажите эл.почту">
+            <div class="form__input-section <?= isset($errors['email']) ? "form__input-section--error": ""?>">
+              <input class="registration__input form__input" id="registration-email" type="email" name="email" placeholder="Укажите эл.почту" value = "<?= getPostVal('email')?>">
               <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
               
               <div class="form__error-text">
                 <h3 class="form__error-title">Заголовок сообщения</h3>
-                <p class="form__error-desc"><?= isset($errors['email']) ?" form__item--invalid" : ""?></p>
+                <p class="form__error-desc"><?= $errors['email'] ?></p>
               </div>
             </div>
           </div>
           <div class="registration__input-wrapper form__input-wrapper">
             <label class="registration__label form__label" for="registration-login">Логин <span class="form__input-required">*</span></label>
-            <div class="form__input-section">
-              <input class="registration__input form__input" id="registration-login" type="text" name="login" placeholder="Укажите логин">
+            <div class="form__input-section <?= isset($errors['login']) ? "form__input-section--error": ""?>">
+              <input class="registration__input form__input" id="registration-login" type="text" name="login" placeholder="Укажите логин" value = "<?= getPostVal('login')?>">
               <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
               <div class="form__error-text">
                 <h3 class="form__error-title">Заголовок сообщения</h3>
-                <p class="form__error-desc"><?= isset($errors['login']) ?" form__item--invalid" : ""?></p>
+                <p class="form__error-desc"><?= $errors['login']?></p>
               </div>
             </div>
           </div>
           <div class="registration__input-wrapper form__input-wrapper">
             <label class="registration__label form__label" for="registration-password">Пароль<span class="form__input-required">*</span></label>
-            <div class="form__input-section">
+            <div class="form__input-section <?= isset($errors['password']) ? "form__input-section--error": ""?>">
               <input class="registration__input form__input" id="registration-password" type="password" name="password" placeholder="Придумайте пароль">
               <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
               <div class="form__error-text">
                 <h3 class="form__error-title">Заголовок сообщения</h3>
-                <p class="form__error-desc"><?= isset($errors['password']) ?" form__item--invalid" : ""?></p>
+                <p class="form__error-desc"><?= $errors['password']?></p>
               </div>
             </div>
           </div>
           <div class="registration__input-wrapper form__input-wrapper">
             <label class="registration__label form__label" for="registration-password-repeat">Повтор пароля<span class="form__input-required">*</span></label>
-            <div class="form__input-section">
+            <div class="form__input-section <?= isset($errors['password-repeat']) ? "form__input-section--error": ""?>">
               <input class="registration__input form__input" id="registration-password-repeat" type="password" name="password-repeat" placeholder="Повторите пароль">
               <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
               <div class="form__error-text">
                 <h3 class="form__error-title">Заголовок сообщения</h3>
-                <p class="form__error-desc"><?= isset($errors['password_repeat']) ?" form__item--invalid" : ""?></p>
+                <p class="form__error-desc"><?= $errors['password-repeat']?></p>
               </div>
             </div>
           </div>
@@ -69,7 +69,7 @@
       <div class="registration__input-file-container form__input-container form__input-container--file">
         <div class="registration__input-file-wrapper form__input-file-wrapper">
           <div class="registration__file-zone form__file-zone dropzone">
-            <input class="registration__input-file form__input-file" id="userpic-file" type="file" name="userpic-file" title=" ">
+            <input class="registration__input-file form__input-file" id="userpic-file" type="file" name="userpic-file" title=" " value = "<?= getPostVal('userpic-file')?>">
             <div class="form__file-zone-text">
               <span>Перетащите фото сюда</span>
             </div>

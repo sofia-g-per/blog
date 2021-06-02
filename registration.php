@@ -61,7 +61,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && empty($errors)){
             'profile_pic' => $user['userpic-file']
         ]);
 
-        header("Location: feed.php");
+        header("Location: login.php");
     }
 }
 

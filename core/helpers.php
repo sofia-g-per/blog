@@ -210,7 +210,7 @@ function generate_random_date($index)
 //Функция проверяет заполненно ли поле
 function validateFilled($name){
     if(empty($_POST[$name])){
-        return "Это поле должно быть заполнено";
+        return "Поле должно быть заполнено";
     }
 }
 
@@ -248,6 +248,6 @@ function validateImage($name) {
 
 //Функция для сохранения данных из формы при её ошибочном заполнении
 function getPostVal($name){
-    return $_POST($name) ?? "";
+    return $_POST[$name] ?? "";
 
 }
