@@ -205,3 +205,49 @@ function generate_random_date($index)
 
     return $dt;
 }
+
+
+//Функция проверяет заполненно ли поле
+function validateFilled($name){
+    if(empty($_POST[$name])){
+        return "Это поле должно быть заполнено";
+    }
+}
+
+//Функция проверяет соответствут ли email формату
+function validateEmail($name) {
+    if (!filter_input(INPUT_POST, $name, FILTER_VALIDATE_EMAIL)) {
+        return "Введите корректный email";
+
+    }
+}
+
+//Функция проверяет совпадают ли первый и второй введенные пароли в форме регистрации
+function comparePasswords($password, $password_repeat) {
+    if ($_POST[$password] != $_POST[$password_repeat]) {
+        return "Пароли не совпадают";
+    }
+}
+
+//Функция совпадает ли загруженное изображение требованиям
+function validateImage($name) {
+    if (!empty($FILES[$name]['name'])) {
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $tmp_name = $_FILES[$name]['tmp_name'];
+        $file_type = finfo_file($finfo, $tmp_name);
+        //проверка совпадения формата изображения  с допустимыми(jpeg, png, jpg)
+        if ($file_type !== "image/jpeg" && $file_type !== "image/png" && $file_type !== "image/jpg"){
+            return false;
+        }
+    return true; //если поле не пустое и подходит по форматам
+    } else {
+        return false; //если поле пустое
+
+    }
+}
+
+//Функция для сохранения данных из формы при её ошибочном заполнении
+function getPostVal($name){
+    return $_POST($name) ?? "";
+
+}

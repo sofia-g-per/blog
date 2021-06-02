@@ -4,7 +4,7 @@
   </div>
   <section class="registration container">
     <h2 class="visually-hidden">Форма регистрации</h2>
-    <form class="registration__form form" action="#" method="post" enctype="multipart/form-data">
+    <form class="registration__form form" action="../registration.php" method="post" enctype="multipart/form-data">
       <div class="form__text-inputs-wrapper">
         <div class="form__text-inputs">
           <div class="registration__input-wrapper form__input-wrapper">
@@ -12,9 +12,10 @@
             <div class="form__input-section">
               <input class="registration__input form__input" id="registration-email" type="email" name="email" placeholder="Укажите эл.почту">
               <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
+              
               <div class="form__error-text">
                 <h3 class="form__error-title">Заголовок сообщения</h3>
-                <p class="form__error-desc">Текст сообщения об ошибке, подробно объясняющий, что не так.</p>
+                <p class="form__error-desc"><?= isset($errors['email']) ?" form__item--invalid" : ""?></p>
               </div>
             </div>
           </div>
@@ -25,7 +26,7 @@
               <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
               <div class="form__error-text">
                 <h3 class="form__error-title">Заголовок сообщения</h3>
-                <p class="form__error-desc">Текст сообщения об ошибке, подробно объясняющий, что не так.</p>
+                <p class="form__error-desc"><?= isset($errors['login']) ?" form__item--invalid" : ""?></p>
               </div>
             </div>
           </div>
@@ -36,7 +37,7 @@
               <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
               <div class="form__error-text">
                 <h3 class="form__error-title">Заголовок сообщения</h3>
-                <p class="form__error-desc">Текст сообщения об ошибке, подробно объясняющий, что не так.</p>
+                <p class="form__error-desc"><?= isset($errors['password']) ?" form__item--invalid" : ""?></p>
               </div>
             </div>
           </div>
@@ -47,19 +48,24 @@
               <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
               <div class="form__error-text">
                 <h3 class="form__error-title">Заголовок сообщения</h3>
-                <p class="form__error-desc">Текст сообщения об ошибке, подробно объясняющий, что не так.</p>
+                <p class="form__error-desc"><?= isset($errors['password_repeat']) ?" form__item--invalid" : ""?></p>
               </div>
             </div>
           </div>
         </div>
-        <div class="form__invalid-block">
-          <b class="form__invalid-slogan">Пожалуйста, исправьте следующие ошибки:</b>
-          <ul class="form__invalid-list">
-            <li class="form__invalid-item">Заголовок. Это поле должно быть заполнено.</li>
-            <li class="form__invalid-item">Цитата. Она не должна превышать 70 знаков.</li>
-          </ul>
+        <?php if (isset($errors)): ?>
+          <div class="form__invalid-block">
+            <b class="form__invalid-slogan">Пожалуйста, исправьте следующие ошибки:</b>
+            <ul class="form__invalid-list">
+              <?php foreach($errors as $error): ?>
+              <li class="form__invalid-item"><?= $error ?></li>
+              <?php endforeach;?>
+            </ul>
+          </div>
+          <?php endif;?>
         </div>
-      </div>
+
+
       <div class="registration__input-file-container form__input-container form__input-container--file">
         <div class="registration__input-file-wrapper form__input-file-wrapper">
           <div class="registration__file-zone form__file-zone dropzone">
