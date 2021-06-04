@@ -36,6 +36,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && empty($errors)){
         if(password_verify($user['password'], $dbUser['password'])){
             $_SESSION['user_id'] = $dbUser['id'];
             $_SESSION['login'] = $dbUser['login'];
+            $_SESSION['profile_pic'] = $dbUser['profile_pic'];
             header("Location: popular.php");
         }
         else{

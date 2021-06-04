@@ -231,7 +231,7 @@ function comparePasswords($password, $password_repeat) {
 
 //Функция совпадает ли загруженное изображение требованиям
 function validateImage($name) {
-    if (!empty($FILES[$name]['name'])) {
+    if (!empty($_FILES[$name]['name'])) {
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $tmp_name = $_FILES[$name]['tmp_name'];
         $file_type = finfo_file($finfo, $tmp_name);
@@ -242,12 +242,29 @@ function validateImage($name) {
     return true; //если поле не пустое и подходит по форматам
     } else {
         return false; //если поле пустое
-
     }
 }
 
 //Функция для сохранения данных из формы при её ошибочном заполнении
 function getPostVal($name){
     return $_POST[$name] ?? "";
+}
 
+//
+function validateURL($name){
+    if(!empty($name)){
+        if(!filter_input(INPUT_POST, $name, FILTER_VALIDATE_URL)){
+            return "Введите корректную ссылку";
+        }
+    } else{
+        return "Это поле должно быть заполнено";
+    }
+}
+
+//функция для удобного выведения данных массива, перемнных и тд для разработчика
+function dd($args){
+    echo "<pre>";
+    var_dump($args);
+    echo "</pre>";
+    die;
 }

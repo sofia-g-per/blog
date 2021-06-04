@@ -17,24 +17,28 @@ $rules = [
         return comparePasswords('password', 'password-repeat');
     },
     'userpic-file' =>function(){
-        return validateImage('userpic-file');
+        //проверка загружено ли фото и в правильном ли формате
+        if(!validateImage('userpic-file')){
+            return "Загрузите картинку в формате jpg, jpeg или png";
+        }
     }
 ];
+
+
 
 $user = $_POST;
 
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
-
+    
     //проверка полей на ошибки
     foreach($user as $key=> $value ){
         if(isset($rules[$key])){
             $errors[$key] = $rules[$key]();
         };
-    }
+    }    
 }
 $errors = array_filter($errors);
-//var_dump($errors);
-//echo(isset($errors));
+
 
 //если форма отправлена без ошибок
 if($_SERVER['REQUEST_METHOD'] == 'POST' && empty($errors)){
@@ -48,19 +52,18 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && empty($errors)){
     }
     else{
         //подготовка изображения для загрузки в БД
+        
         $file_name = $_FILES['userpic-file']['name'];
-        $user['userpic-file'] = 'uploads/'.uniqid().$file_name;
+        $user['userpic-file'] = 'uploads/'.uniqid().$file_name; 
         move_uploaded_file($_FILES['userpic-file']['tmp_name'], $user['userpic-file']);
-
         $stmnt = $con -> prepare('INSERT INTO Users 
-        SET email=:email, login =:login, password=:password, profile_pic=:profile_pic');
+        SET email=:email, login=:login, password=:password, profile_pic=:profile_pic');
         $stmnt -> execute([
             'email' => $user['email'],
             'login' => $user['login'],
             'password' => $user['password'],
             'profile_pic' => $user['userpic-file']
         ]);
-
         header("Location: login.php");
     }
 }

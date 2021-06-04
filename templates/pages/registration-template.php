@@ -53,12 +53,12 @@
             </div>
           </div>
         </div>
-        <?php if (isset($errors)): ?>
+        <?php if (!empty($errors)): ?>
           <div class="form__invalid-block">
             <b class="form__invalid-slogan">Пожалуйста, исправьте следующие ошибки:</b>
             <ul class="form__invalid-list">
               <?php foreach($errors as $error): ?>
-              <li class="form__invalid-item"><?= $error ?></li>
+                <li class="form__invalid-item"><?= $error ?></li>
               <?php endforeach;?>
             </ul>
           </div>
@@ -66,25 +66,34 @@
         </div>
 
 
-      <div class="registration__input-file-container form__input-container form__input-container--file">
+        <div class="registration__input-file-container form__input-container form__input-container--file">
         <div class="registration__input-file-wrapper form__input-file-wrapper">
           <div class="registration__file-zone form__file-zone dropzone">
-            <input class="registration__input-file form__input-file" id="userpic-file" type="file" name="userpic-file" title=" " value = "<?= getPostVal('userpic-file')?>">
+            <input class="registration__input-file form__input-file" id="userpic" type="file" name="userpic-file" title=" ">
             <div class="form__file-zone-text">
               <span>Перетащите фото сюда</span>
             </div>
           </div>
-          <button class="registration__input-file-button form__input-file-button button" type="button">
-            <span>Выбрать фото</span>
-            <svg class="registration__attach-icon form__attach-icon" width="10" height="20">
-              <use xlink:href="#icon-attach"></use>
-            </svg>
-          </button>
         </div>
         <div class="registration__file form__file dropzone-previews">
-
+            <div class="dz-preview dz-file-preview">
+                <div class="registration__image-wrapper form__file-wrapper"><img class="form__image" src="" alt=""
+                data-dz-thumbnail></div>
+                <div class="registration__file-data form__file-data"><span
+                        class="registration__file-name form__file-name dz-filename" data-dz-name></span>
+                    <button class="registration__delete-button form__delete-button button" type="button" data-dz-remove>
+                        <span>Удалить</span>
+                        <svg class="registration__delete-icon form__delete-icon" xmlns="http://www.w3.org/2000/svg"
+                             viewBox="0 0 18 18" width="12" height="12">
+                            <path
+                                d="M18 1.3L16.7 0 9 7.7 1.3 0 0 1.3 7.7 9 0 16.7 1.3 18 9 10.3l7.7 7.7 1.3-1.3L10.3 9z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
         </div>
       </div>
+
       <button class="registration__submit button button--main" type="submit">Отправить</button>
     </form>
   </section>
