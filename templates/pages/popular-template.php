@@ -8,7 +8,8 @@
                 <b class="popular__sorting-caption sorting__caption">Сортировка:</b>
                 <ul class="popular__sorting-list sorting__list">
                     <li class="sorting__item sorting__item--popular">
-                        <a class="sorting__link sorting__link--active" href="#">
+                        <a class="sorting__link sorting__link<?=$pagePar=='views'?'--active':''?>" 
+                            href="http://practica/popular.php?page=<?=$pageNum?>&par=views&con=<?=$pageCat?>">
                             <span>Популярность</span>
                             <svg class="sorting__icon" width="10" height="12">
                                 <use xlink:href="#icon-sort"></use>
@@ -16,7 +17,8 @@
                         </a>
                     </li>
                     <li class="sorting__item">
-                        <a class="sorting__link" href="#">
+                        <a class="sorting__link<?=$pagePar=='likes_num'?'--active':''?>"
+                             href="http://practica/popular.php?page=<?=$pageNum?>&par=likes_num&con=<?=$pageCat?>">
                             <span>Лайки</span>
                             <svg class="sorting__icon" width="10" height="12">
                                 <use xlink:href="#icon-sort"></use>
@@ -24,7 +26,8 @@
                         </a>
                     </li>
                     <li class="sorting__item">
-                        <a class="sorting__link" href="#">
+                        <a class="sorting__link<?=$pagePar=='reg_date'?'--active':''?>"
+                            href="http://practica/popular.php?page=<?=$pageNum?>&par=reg_date&con=<?=$pageCat?>">
                             <span>Дата</span>
                             <svg class="sorting__icon" width="10" height="12">
                                 <use xlink:href="#icon-sort"></use>
@@ -37,12 +40,14 @@
                 <b class="popular__filters-caption filters__caption">Тип контента:</b>
                 <ul class="popular__filters-list filters__list">
                     <li class="popular__filters-item popular__filters-item--all filters__item filters__item--all">
-                        <a class="filters__button filters__button--ellipse filters__button--all filters__button--active" href="#">
+                        <a class="filters__button filters__button--ellipse filters__button--all filters__button--active" 
+                            href="http://practica/popular.php?page=<?=$pageNum?>&par=<?=$pagePar?>&con=default">
                             <span>Все</span>
                         </a>
                     </li>
                     <li class="popular__filters-item filters__item">
-                        <a class="filters__button filters__button--photo button" href="#">
+                        <a class="filters__button filters__button--photo button" 
+                            href="http://practica/popular.php?page=<?=$pageNum?>&par=<?=$pagePar?>&con=photo">
                             <span class="visually-hidden">Фото</span>
                             <svg class="filters__icon" width="22" height="18">
                                 <use xlink:href="#icon-filter-photo"></use>
@@ -50,7 +55,8 @@
                         </a>
                     </li>
                     <li class="popular__filters-item filters__item">
-                        <a class="filters__button filters__button--video button" href="#">
+                        <a class="filters__button filters__button--video button" 
+                            href="http://practica/popular.php?page=<?=$pageNum?>&par=<?=$pagePar?>&con=video">
                             <span class="visually-hidden">Видео</span>
                             <svg class="filters__icon" width="24" height="16">
                                 <use xlink:href="#icon-filter-video"></use>
@@ -58,7 +64,8 @@
                         </a>
                     </li>
                     <li class="popular__filters-item filters__item">
-                        <a class="filters__button filters__button--text button" href="#">
+                        <a class="filters__button filters__button--text button" 
+                            href="http://practica/popular.php?page=<?=$pageNum?>&par=<?=$pagePar?>&con=text">
                             <span class="visually-hidden">Текст</span>
                             <svg class="filters__icon" width="20" height="21">
                                 <use xlink:href="#icon-filter-text"></use>
@@ -66,7 +73,8 @@
                         </a>
                     </li>
                     <li class="popular__filters-item filters__item">
-                        <a class="filters__button filters__button--quote button" href="#">
+                        <a class="filters__button filters__button--quote button" 
+                            href="http://practica/popular.php?page=<?=$pageNum?>&par=<?=$pagePar?>&con=quote">
                             <span class="visually-hidden">Цитата</span>
                             <svg class="filters__icon" width="21" height="20">
                                 <use xlink:href="#icon-filter-quote"></use>
@@ -74,7 +82,8 @@
                         </a>
                     </li>
                     <li class="popular__filters-item filters__item">
-                        <a class="filters__button filters__button--link button" href="#">
+                        <a class="filters__button filters__button--link button" 
+                            href="http://practica/popular.php?page=<?=$pageNum?>&par=<?=$pagePar?>&con=link">
                             <span class="visually-hidden">Ссылка</span>
                             <svg class="filters__icon" width="21" height="18">
                                 <use xlink:href="#icon-filter-link"></use>
@@ -163,7 +172,7 @@
                                 </div>
                                 <div class="post__info">
                                     <b class="post__author-name"><?=$post['login']?></b>
-                                    <time class="post__time" datetime="">дата</time>
+                                    <time class="post__time" datetime=""><?=$post['date_created']?></time>
                                 </div>
                             </a>
                         </div>
@@ -176,14 +185,14 @@
                                     <svg class="post__indicator-icon post__indicator-icon--like-active" width="20" height="17">
                                         <use xlink:href="#icon-heart-active"></use>
                                     </svg>
-                                    <span><?=$likesNum?></span>
+                                    <span><?=$post['likes_num']?></span>
                                     <span class="visually-hidden">количество лайков</span>
                                 </a>
                                 <a class="post__indicator post__indicator--comments button" href="#" title="Комментарии">
                                     <svg class="post__indicator-icon" width="19" height="17">
                                         <use xlink:href="#icon-comment"></use>
                                     </svg>
-                                    <span><?=$commentsNum?></span>
+                                    <span><?=$post['comments_num']?></span>
                                     <span class="visually-hidden">количество комментариев</span>
                                 </a>
                             </div>
@@ -193,8 +202,10 @@
             <?php endforeach; ?>
         </div>
         <div class="popular__page-links">
-            <a class="popular__page-link popular__page-link--prev button button--gray" href="#">Предыдущая страница</a>
-            <a class="popular__page-link popular__page-link--next button button--gray" href="#">Следующая страница</a>
+            <?php if($pageNum > 0): ?>
+                <a class="popular__page-link popular__page-link--prev button button--gray" href="http://practica/popular.php?page=<?= $pageNum-1?>&par=<?=$pagePar?>&con=<?=$pageCat?>">Предыдущая страница</a>
+            <?php endif;?>
+            <a class="popular__page-link popular__page-link--next button button--gray" href="http://practica/popular.php?page=<?=$pageNum+1?>&par=<?=$pagePar?>&con=<?=$pageCat?>">Следующая страница</a>
         </div>
     </div>
 </section>
