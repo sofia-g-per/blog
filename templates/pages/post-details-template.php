@@ -1,6 +1,6 @@
 <main class="page__main page__main--publication">
   <div class="container">
-    <h1 class="page__title page__title--publication">Наконец, обработала фотки!</h1>
+    <h1 class="page__title page__title--publication"><?= $post['title']?></h1>
     <section class="post-details">
       <h2 class="visually-hidden">Публикация</h2>
       <div class="post-details__wrapper post-photo">
@@ -17,7 +17,7 @@
                 <svg class="post__indicator-icon post__indicator-icon--like-active" width="20" height="17">
                   <use xlink:href="#icon-heart-active"></use>
                 </svg>
-                <span>250</span>
+                <span><?=$likesNum?></span>
                 <span class="visually-hidden">количество лайков</span>
               </a>
               <a class="post__indicator post__indicator--comments button" href="#" title="Комментарии">
@@ -37,14 +37,13 @@
             </div>
             <span class="post__view"><?= $post['views']?> просмотров</span>
           </div>
-          <ul class="post__tags">
-            <li><a href="#">#nature</a></li>
-            <li><a href="#">#globe</a></li>
-            <li><a href="#">#photooftheday</a></li>
-            <li><a href="#">#canon</a></li>
-            <li><a href="#">#landscape</a></li>
-            <li><a href="#">#щикарныйвид</a></li>
-          </ul>
+          <?php if(!empty($hashtags)): ?>
+            <ul class="post__tags">
+              <?php foreach($hashtags as $hashtag):?>
+                <li><a href="#">#<?= $hashtag?></a></li>
+              <?php endforeach; ?>
+            </ul>
+          <? endif; ?>
           <div class="comments">
             <form class="comments__form form" action="#" method="post">
               <div class="comments__my-avatar">
@@ -111,23 +110,23 @@
           <div class="post-details__user-info user__info">
             <div class="post-details__avatar user__avatar">
               <a class="post-details__avatar-link user__avatar-link" href="#">
-                <img class="post-details__picture user__picture" src="img/userpic-elvira.jpg" alt="Аватар пользователя">
+                <img class="post-details__picture user__picture" src="<?=$post['profile_pic'] ?>" alt="Аватар пользователя">
               </a>
             </div>
             <div class="post-details__name-wrapper user__name-wrapper">
               <a class="post-details__name user__name" href="#">
-                <span>Эльвира Хайпулинова</span>
+                <span><?= $post['login']?></span>
               </a>
               <time class="post-details__time user__time" datetime="2014-03-20">5 лет на сайте</time>
             </div>
           </div>
           <div class="post-details__rating user__rating">
             <p class="post-details__rating-item user__rating-item user__rating-item--subscribers">
-              <span class="post-details__rating-amount user__rating-amount">1856</span>
+              <span class="post-details__rating-amount user__rating-amount"><?= $followersNum?></span>
               <span class="post-details__rating-text user__rating-text">подписчиков</span>
             </p>
             <p class="post-details__rating-item user__rating-item user__rating-item--publications">
-              <span class="post-details__rating-amount user__rating-amount">556</span>
+              <span class="post-details__rating-amount user__rating-amount"><?= $likesNum?></span>
               <span class="post-details__rating-text user__rating-text">публикаций</span>
             </p>
           </div>
