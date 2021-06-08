@@ -8,7 +8,6 @@ $pageNum = filter_input(INPUT_GET, "page", FILTER_SANITIZE_NUMBER_INT);
 $pagePar = filter_input(INPUT_GET, "par"); //likes, views or date is used as a filter for posts showing
 $pageCat = filter_input(INPUT_GET, "con");
 
-
 //find 10 posts with biggest view number 
 //change 4 to 10
 
@@ -38,6 +37,7 @@ switch($pagePar){
 if ($pageCat == 'default'){
     $stmnt = $con-> prepare($basic);
 } else{
+    //fix bindvalue adding '' around the variable
     $basic = $basic.' WHERE content_type = :pageCat';
     $stmnt = $con-> prepare($basic);
     $stmnt->bindValue(':pageCat', $pageCat, PDO::PARAM_STR);
@@ -51,7 +51,7 @@ $posts = $stmnt->fetchAll();
 
 $popularContent = include_template("pages/popular-template.php", 
 [
-    'posts' =>$posts,
+    'posts' => $posts,
     'pageNum' => $pageNum,
     'pageCat' => $pageCat,
     'pagePar' => $pagePar
