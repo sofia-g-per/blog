@@ -1,7 +1,6 @@
 <?php
 require_once("core/helpers.php");
 require_once("core/init.php");
-
 //$page = ""
 $postId = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT);
 
@@ -64,12 +63,13 @@ $commentsNum = count($comments);
 $errors =[];
 $newComment = $_POST;
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
-    $errors = validateFilled('text');
+    //dd($newComment);
+    $text = trim($newComment['text']);
+    $errors['text'] = validateFilled('text');
+    $errors = array_filter($errors);
 }
 
-
 if($_SERVER['REQUEST_METHOD'] == 'POST' && empty($errors)){
-
     $stmnt = $con->prepare("INSERT INTO Comments SET text = :text, author = :user, post = :post");
     $stmnt->execute([
         'text' => $newComment['text'],

@@ -107,7 +107,6 @@
                         <?php switch($post['content_type']):
                             case('quote'):?>
                                 <!--содержимое для поста-цитата -->
-                                        <?= $post['title'] ?>
                                     <blockquote>
                                         <p>
                                             <?= $post['content'] ?>
@@ -180,16 +179,19 @@
                         </div>
                         <div class="post__indicators">
                             <div class="post__buttons">
-                                <a class="post__indicator post__indicator--likes button" href="#" title="Лайк">
-                                    <svg class="post__indicator-icon" width="20" height="17">
-                                        <use xlink:href="#icon-heart"></use>
-                                    </svg>
-                                    <svg class="post__indicator-icon post__indicator-icon--like-active" width="20" height="17">
-                                        <use xlink:href="#icon-heart-active"></use>
-                                    </svg>
-                                    <span><?=$post['likes_num']?></span>
-                                    <span class="visually-hidden">количество лайков</span>
-                                </a>
+                                <form action="add-like.php">
+                                    <input type="text" class="visually-hidden" name="post-id" value="<?=$post['id']?>">
+                                    <button class="post__indicator post__indicator--likes button" type="submit">
+                                        <svg class="post__indicator-icon" width="20" height="17">
+                                            <use xlink:href="#icon-heart"></use>
+                                        </svg>
+                                        <svg class="post__indicator-icon post__indicator-icon--like-active" width="20" height="17">
+                                            <use xlink:href="#icon-heart-active"></use>
+                                        </svg>
+                                        <span><?=$post['likes_num']?></span>
+                                        <span class="visually-hidden">количество лайков</span>
+                                    </button>
+                                </form>
                                 <a class="post__indicator post__indicator--comments button" href="#" title="Комментарии">
                                     <svg class="post__indicator-icon" width="19" height="17">
                                         <use xlink:href="#icon-comment"></use>

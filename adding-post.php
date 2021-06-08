@@ -5,8 +5,6 @@ require_once("core/init.php");
 if(!isset($_POST['content_type'])){
     $_POST['content_type'] = "photo";
 }
-
-
 $errors = [];
 
 $rules = [
@@ -70,8 +68,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     }
     $errors = array_filter($errors);
 }
-
-
 
 if($_SERVER['REQUEST_METHOD'] == 'POST' && empty($errors)){
     //универсальный запрос 

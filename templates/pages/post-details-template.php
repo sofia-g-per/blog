@@ -67,30 +67,37 @@
               <img src="img/rock-default.jpg" alt="Фото от пользователя" width="760" height="507"> -->
           <div class="post__indicators">
             <div class="post__buttons">
-              <a class="post__indicator post__indicator--likes button" href="#" title="Лайк">
-                <svg class="post__indicator-icon" width="20" height="17">
-                  <use xlink:href="#icon-heart"></use>
-                </svg>
-                <svg class="post__indicator-icon post__indicator-icon--like-active" width="20" height="17">
-                  <use xlink:href="#icon-heart-active"></use>
-                </svg>
-                <span><?=$post['likes_num']?></span>
-                <span class="visually-hidden">количество лайков</span>
-              </a>
+              <form action="add-like.php">
+                <input type="text" class="visually-hidden" name="post-id" value="<?=$post['id']?>">
+                <!-- <input class="visually-hidden" name="like" type="text"> -->
+                <button class="post__indicator post__indicator--likes button" type="submit" title="Лайк">
+                  <svg class="post__indicator-icon" width="20" height="17">
+                    <use xlink:href="#icon-heart"></use>
+                  </svg>
+                  <svg class="post__indicator-icon post__indicator-icon--like-active" width="20" height="17">
+                    <use xlink:href="#icon-heart-active"></use>
+                  </svg>
+                  <span><?=$post['likes_num']?></span>
+                  <span class="visually-hidden">количество лайков</span>
+                </button>
+              </form>
               <a class="post__indicator post__indicator--comments button" href="#" title="Комментарии">
                 <svg class="post__indicator-icon" width="19" height="17">
                   <use xlink:href="#icon-comment"></use>
                 </svg>
-                <span>25</span>
+                <span><?=$commentsNum?></span>
                 <span class="visually-hidden">количество комментариев</span>
               </a>
-              <a class="post__indicator post__indicator--repost button" href="#" title="Репост">
-                <svg class="post__indicator-icon" width="19" height="17">
-                  <use xlink:href="#icon-repost"></use>
-                </svg>
-                <span><?=$post['repost_num']?></span>
-                <span class="visually-hidden">количество репостов</span>
-              </a>
+              <form action="repost.php">
+                <input type="text" class="visually-hidden" name="post-id" value="<?=$post['id']?>">
+                <button class="post__indicator post__indicator--repost button" type="submit"title="Репост">
+                  <svg class="post__indicator-icon" width="19" height="17">
+                    <use xlink:href="#icon-repost"></use>
+                  </svg>
+                  <span><?=$post['repost_num']?></span>
+                  <span class="visually-hidden">количество репостов</span>
+              </button>
+              </form>
             </div>
             <span class="post__view"><?= $post['views']?> просмотров</span>
             </div>
@@ -102,11 +109,11 @@
               </ul>
             <? endif; ?>
             <div class="comments">
-              <form class="comments__form form" action="post-details.php" method="post">
+              <form class="comments__form form" method="post">
                 <div class="comments__my-avatar">
                   <img class="comments__picture" src="<?=$_SESSION['profile_pic']?>" alt="Аватар пользователя">
                 </div>
-                <div class="form__input-section <?isset($errors)?"form__input-section--error" : ""?>">
+                <div class="form__input-section<?=!empty($errors)? " form__input-section--error":""?>">
                   <input type="text" class="visually-hidden" name="post-id" value="<?=$post['id']?>">
                   <textarea class="comments__textarea form__textarea form__input" name="text" 
                     placeholder="Ваш комментарий" value=<?=!empty($newComment)? $newComment['text']:""?>>
@@ -116,7 +123,7 @@
                   <button class="form__error-button button" type="button">!</button>
                   <div class="form__error-text">
                     <h3 class="form__error-title">Ошибка валидации</h3>
-                    <p class="form__error-desc">Это поле обязательно к заполнению</p>
+                    <p class="form__error-desc"><?=$errors['text']?? ""?></p>
                   </div>
                 </div>
                 <button class="comments__submit button button--green" type="submit">Отправить</button>

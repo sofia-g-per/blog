@@ -37,7 +37,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && empty($errors)){
             $_SESSION['user_id'] = $dbUser['id'];
             $_SESSION['login'] = $dbUser['login'];
             $_SESSION['profile_pic'] = $dbUser['profile_pic'];
-            header("Location: popular.php");
+            header("Location: popular.php?page=0&par=views&con=default");
         }
         else{
             //если неверный пароль

@@ -209,7 +209,7 @@ function generate_random_date($index)
 
 //Функция проверяет заполненно ли поле
 function validateFilled($name){
-    if(empty($_POST[$name])){
+    if(empty($_POST[$name]) || ctype_space($_POST[$name])){
         return "Поле должно быть заполнено";
     }
 }
