@@ -2,6 +2,8 @@
 require_once("core/helpers.php");
 require_once("core/init.php");
 
+$page = 'popular';
+
 //page link dhould have the page number which will define the offset in this line -FIX!!!
 //same concept for filtering posts by type
 $pageNum = filter_input(INPUT_GET, "page", FILTER_SANITIZE_NUMBER_INT);
@@ -48,9 +50,14 @@ $stmnt->bindValue(':st', $offset, PDO::PARAM_INT);
 $stmnt->execute();
 $posts = $stmnt->fetchAll();
 
+$postsContent = include_template("post-on-page-template.php", [
+    'posts' => $posts,
+    'page' => $page
+]);
 
 $popularContent = include_template("pages/popular-template.php", 
 [
+    'postsContent' => $postsContent,
     'posts' => $posts,
     'pageNum' => $pageNum,
     'pageCat' => $pageCat,

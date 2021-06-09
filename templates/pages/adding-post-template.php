@@ -9,7 +9,7 @@
                   <ul class="adding-post__tabs-list filters__list tabs__list">
                       <li class="adding-post__tabs-item filters__item">
                           <a class="adding-post__tabs-link filters__button filters__button--photo tabs__item button
-                          <?= $_POST['content_type'] == 'photo' ? 'filters__button--active tabs__item--active': ''?>" href="#">
+                            <?= $_POST['content_type'] == 'photo' ? 'filters__button--active tabs__item--active': ''?>" href="#">
                               <svg class="filters__icon" width="22" height="18">
                                   <use xlink:href="#icon-filter-photo"></use>
                               </svg>
@@ -18,7 +18,7 @@
                       </li>
                       <li class="adding-post__tabs-item filters__item">
                           <a class="adding-post__tabs-link filters__button filters__button--video tabs__item button
-                          <?= $_POST['content_type'] == 'video' ? 'filters__button--active tabs__item--active': ''?>" href="#">
+                           <?= $_POST['content_type'] == 'video' ? 'filters__button--active tabs__item--active': ''?>" href="#">
                               <svg class="filters__icon" width="24" height="16">
                                   <use xlink:href="#icon-filter-video"></use>
                               </svg>
@@ -26,7 +26,7 @@
                           </a>
                       </li>
                       <li class="adding-post__tabs-item filters__item">
-                          <a class="adding-post__tabs-link filters__button filters__button--text tabs__item button
+                            <a class="adding-post__tabs-link filters__button filters__button--text tabs__item button
                           <?= $_POST['content_type'] == 'text' ? 'filters__button--active tabs__item--active': ''?>" href="#">
                               <svg class="filters__icon" width="20" height="21">
                                   <use xlink:href="#icon-filter-text"></use>
