@@ -7,7 +7,8 @@
           <h2 class="visually-hidden">Лента</h2>
           <div class="feed__main-wrapper">
             <div class="feed__wrapper">
-              <article class="feed__post post post-photo">
+              <?= $postDisplay?>
+              <!-- <article class="feed__post post post-photo">
                 <header class="post__header post__author">
                   <a class="post__author-link" href="#" title="Автор">
                     <div class="post__avatar-wrapper">
@@ -277,55 +278,27 @@
                     </a>
                   </div>
                 </footer>
-              </article>
+              </article> -->
             </div>
           </div>
           <ul class="feed__filters filters">
             <li class="feed__filters-item filters__item">
-              <a class="filters__button filters__button--active" href="#">
+              <a class="filters__button filters__button--ellipse filters__button--all <?$pageCat=='default'?"filters__button--active": "button"?>" 
+                href="feed.php?con=all">
                 <span>Все</span>
               </a>
             </li>
-            <li class="feed__filters-item filters__item">
-              <a class="filters__button filters__button--photo button" href="#">
-                <span class="visually-hidden">Фото</span>
-                <svg class="filters__icon" width="22" height="18">
-                  <use xlink:href="#icon-filter-photo"></use>
-                </svg>
-              </a>
-            </li>
-            <li class="feed__filters-item filters__item">
-              <a class="filters__button filters__button--video button" href="#">
-                <span class="visually-hidden">Видео</span>
-                <svg class="filters__icon" width="24" height="16">
-                  <use xlink:href="#icon-filter-video"></use>
-                </svg>
-              </a>
-            </li>
-            <li class="feed__filters-item filters__item">
-              <a class="filters__button filters__button--text button" href="#">
-                <span class="visually-hidden">Текст</span>
-                <svg class="filters__icon" width="20" height="21">
-                  <use xlink:href="#icon-filter-text"></use>
-                </svg>
-              </a>
-            </li>
-            <li class="feed__filters-item filters__item">
-              <a class="filters__button filters__button--quote button" href="#">
-                <span class="visually-hidden">Цитата</span>
-                <svg class="filters__icon" width="21" height="20">
-                  <use xlink:href="#icon-filter-quote"></use>
-                </svg>
-              </a>
-            </li>
-            <li class="feed__filters-item filters__item">
-              <a class="filters__button filters__button--link button" href="#">
-                <span class="visually-hidden">Ссылка</span>
-                <svg class="filters__icon" width="21" height="18">
-                  <use xlink:href="#icon-filter-link"></use>
-                </svg>
-              </a>
-            </li>
+            <?php foreach($cats as $cat): ?>
+              <li class="popular__filters-item filters__item">
+                  <a class="filters__button filters__button--<?=$cat['class_name']?> filters__button<?=$pageCat == $cat['class_name']?'--active': ''?>" 
+                      href="feed.php?con=<?=$cat['class_name']?>">
+                      <span class="visually-hidden"><?=$cat['name']?></span>
+                      <svg class="filters__icon" width="22" height="18">
+                          <use xlink:href="#icon-filter-<?=$cat['class_name']?>"></use>
+                      </svg>
+                  </a>
+              </li>
+            <?php endforeach; ?>
           </ul>
         </section>
         <aside class="promo">

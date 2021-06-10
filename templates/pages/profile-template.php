@@ -2,7 +2,8 @@
       <h1 class="visually-hidden">Профиль</h1>
       <div class="profile profile--default">
         <div class="profile__user-wrapper">
-          <div class="profile__user user container">
+          <?=$profileTab?>
+          <!-- <div class="profile__user user container">
             <div class="profile__user-info user__info">
               <div class="profile__avatar user__avatar">
                 <img class="profile__picture user__picture" src="<?=$profile['profile_pic']?>" alt="Аватар пользователя">
@@ -23,10 +24,15 @@
               </p>
             </div>
             <div class="profile__user-buttons user__buttons">
-              <button class="profile__user-button user__button user__button--subscription button button--main" type="button">Подписаться</button>
+              <form action="subscribe.php">
+                <input class="visually-hidden" name="profileId" value=<?=$profile['id']?>>
+                <button class="profile__user-button user__button user__button--subscription button button--main" type="submit">
+                    Подписаться
+                </button>
+              </form>
               <a class="profile__user-button user__button user__button--writing button button--green" href="#">Сообщение</a>
             </div>
-          </div>
+          </div> -->
         </div>
         <div class="profile__tabs-wrapper tabs">
           <div class="container">
@@ -34,13 +40,18 @@
               <b class="profile__tabs-caption filters__caption">Показать:</b>
               <ul class="profile__tabs-list filters__list tabs__list">
                 <li class="profile__tabs-item filters__item">
-                  <a class="profile__tabs-link filters__button filters__button--active tabs__item tabs__item--active button">Посты</a>
+                  <a class="profile__tabs-link filters__button<?=$pagePar=="posts"? " filters__button--active tabs__item tabs__item--active button" : " tabs__item button"?>"
+                    href="profile.php?id=<?=$profile['id']?>&par=posts">
+                    Посты
+                  </a>
                 </li>
                 <li class="profile__tabs-item filters__item">
-                  <a class="profile__tabs-link filters__button tabs__item button" href="#">Лайки</a>
+                  <a class="profile__tabs-link filters__button<?=$pagePar=="likes"? " filters__button--active tabs__item tabs__item--active button" : " tabs__item button"?>" 
+                    href="profile.php?id=<?=$profile['id']?>&par=likes">Лайки</a>
                 </li>
                 <li class="profile__tabs-item filters__item">
-                  <a class="profile__tabs-link filters__button tabs__item button" href="#">Подписки</a>
+                  <a class="profile__tabs-link filters__button<?=$pagePar=="subs"? " filters__button--active tabs__item tabs__item--active button" : " tabs__item button"?>" 
+                    href="profile.php?id=<?=$profile['id']?>&par=subs">Подписки</a>
                 </li>
               </ul>
             </div>

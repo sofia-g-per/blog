@@ -1,13 +1,54 @@
 <?php foreach($posts as $post): ?>
     <article class="<?=$page?>__post post post-<?=$post['content_type']?>">
-
-        <header class="post__header">
-            <h2>
-                <a href='../post-details.php?id=<?=$post['id']?>'><?= $post['title']?></a>
-            </h2>
-        </header>
+          
+                <?php switch($page):
+                    case('popular'):?>
+                        <header class="post__header"> 
+                            <h2>
+                                <a href='post-details.php?id=<?=$post['id']?>'> 
+                                    <?=$post['title']?> 
+                                </a>
+                            </h2>
+                        </header>
+                    <? break;
+                    //используется в feed и profile 
+                    default: ?> 
+                        <!-- заголовок если пост НЕ является репостом -->
+                        <?if(!$post['repost']):?>
+                            <header class="post__header post__author">
+                                <a class="post__author-link" href="profile.php?id=<?=$post['author']?>&par=posts" title="Автор">
+                                    <div class="post__avatar-wrapper">
+                                        <img class="post__author-avatar" src="<?=$post['profile_pic']?>" alt="Аватар пользователя" width="60" height="60">
+                                    </div>
+                                    <div class="post__info">
+                                        <b class="post__author-name"><?=$post['login']?></b>
+                                        <span class="post__time">15 минут назад</span>
+                                    </div>
+                                </a>
+                            </header> 
+                        <?php else:?>
+                            <!-- заголовок если пост является репостом -->
+                            <div class="post__author">
+                                <a class="post__author-link" href="#" title="Автор">
+                                    <div class="post__avatar-wrapper post__avatar-wrapper--repost">
+                                        <img class="post__author-avatar" src="<?=$post['original_author']['profile_pic']?>" alt="Аватар пользователя">
+                                    </div>
+                                    <div class="post__info">
+                                        <b class="post__author-name">Репост: <?=($post['original_author']['login'])?></b>
+                                        <time class="post__time" datetime="2019-03-30T14:31">25 минут назад</time>
+                                    </div>
+                                </a>
+                            </div>
+                        <?php endif;?>   
+                    <?php break;
+                endswitch;?>     
 
         <div class="post__main">
+            <!-- если данный пост - репост, то его название выводится в данном заголовке -->
+            <?php if ($page != 'popular' && $post['repost']):?>
+                <h2><?=$post['title']?></h2>
+            <?php endif; ?>
+
             <?php switch($post['content_type']):
                 case('quote'):?>
                     <!--содержимое для поста-цитата -->
@@ -67,21 +108,22 @@
                 <?php break;?>
             <?php endswitch;?>
         </div>
-        <?php switch($page):
-             case('popular'):?>
+        
                 <footer class="post__footer">
+                <?php if($page == 'popular'):?>
                     <div class="post__author">
-                        <a class="post__author-link" href="../post-details.php?id=<?=$post['id']?>" title="Автор">
+                        <a class="post__author-link" href="profile.php?id=<?=$post['author']?>" title="Автор">
                             <div class="post__avatar-wrapper">
-                                <!--укажите путь к файлу аватара-->
-                                <img class="post__author-avatar" src="<?=$post['profile_pic']?>" alt="Аватар пользователя">
+                                <img class="post__author-avatar" src="<?=$post['profile_pic']?>"
+                                     alt="Аватар пользователя">
                             </div>
                             <div class="post__info">
                                 <b class="post__author-name"><?=$post['login']?></b>
-                                <time class="post__time" datetime=""><?=$post['date_created']?></time>
+                                <time class="post__time" datetime="2019-03-30">Месяц назад</time>
                             </div>
                         </a>
                     </div>
+                <?php endif;?>
                     <div class="post__indicators">
                         <div class="post__buttons">
                             <form action="add-like.php">
@@ -97,53 +139,40 @@
                                     <span class="visually-hidden">количество лайков</span>
                                 </button>
                             </form>
-                            <a class="post__indicator post__indicator--comments button" href="#" title="Комментарии">
+                            <form action="#">
+                                <button class="post__indicator post__indicator--comments button" title="Комментарии">
+                                    <svg class="post__indicator-icon" width="19" height="17">
+                                        <use xlink:href="#icon-comment"></use>
+                                    </svg>
+                                    <span><?=$post['comments_num']?></span>
+                                    <span class="visually-hidden">количество комментариев</span>
+                                </button>
+                            </form> 
+                            <form action="repost.php">
+                                <input type="text" class="visually-hidden" name="post-id" value="<?=$post['id']?>">
+                                <button class="post__indicator post__indicator--repost button" type="submit"title="Репост">
                                 <svg class="post__indicator-icon" width="19" height="17">
-                                    <use xlink:href="#icon-comment"></use>
+                                    <use xlink:href="#icon-repost"></use>
                                 </svg>
-                                <span><?=$post['comments_num']?></span>
-                                <span class="visually-hidden">количество комментариев</span>
-                            </a>
+                                <span><?=$post['repost_num']?></span>
+                                <span class="visually-hidden">количество репостов</span>
+                                </button>
+                            </form>
                         </div>
+                        <time class="post__time" datetime="<?=$post['date_created']?>">15 минут назад</time>
                     </div>
-                </footer>
-            <?php break;
-            case('profile'):?>
-                <footer class="post__footer">
-                <div class="post__indicators">
-                    <div class="post__buttons">
-                    <a class="post__indicator post__indicator--likes button" href="add-like.php" title="Лайк">
-                        <svg class="post__indicator-icon" width="20" height="17">
-                        <use xlink:href="#icon-heart"></use>
-                        </svg>
-                        <svg class="post__indicator-icon post__indicator-icon--like-active" width="20" height="17">
-                        <use xlink:href="#icon-heart-active"></use>
-                        </svg>
-                        <span><?=$post['likes_num']?></span>
-                        <span class="visually-hidden">количество лайков</span>
-                    </a>
-                    <a class="post__indicator post__indicator--repost button" href="repost.php" title="Репост">
-                        <svg class="post__indicator-icon" width="19" height="17">
-                        <use xlink:href="#icon-repost"></use>
-                        </svg>
-                        <span><?=$post['repost_num']?></span>
-                        <span class="visually-hidden">количество репостов</span>
-                    </a>
+                    <?php if (isset($hashtags[$post['id']])):?>
+                        <ul class="post__tags">
+                            <?php foreach($hashtags[$post['id']] as $hashtag):?>
+                                <li><a href="#">#<?=$hashtag?></a></li>
+                            <?php endforeach;?>
+                        </ul>
+                    <?php endif;?>
+                </footer> 
+                <?php if($page =='profile'):?>
+                    <div class="comments">
+                        <a class="comments__button button" href="#">Показать комментарии</a>
                     </div>
-                    <time class="post__time" datetime="<?=$post['date_created']?>">15 минут назад</time>
-                </div>
-                <?php if (isset($hashtags[$post['id']])):?>
-                    <ul class="post__tags">
-                        <?php foreach($hashtags[$post['id']] as $hashtag):?>
-                            <li><a href="#">#<?=$hashtag?></a></li>
-                        <?php endforeach;?>
-                    </ul>
                 <?php endif;?>
-                </footer>
-                <div class="comments">
-                <a class="comments__button button" href="#">Показать комментарии</a>
-                </div>
-            <?php break;?>
-        <?php endswitch;?>
     </article>
 <?php endforeach; ?>

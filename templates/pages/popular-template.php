@@ -45,16 +45,18 @@
                             <span>Все</span>
                         </a>
                     </li>
+                    <?php foreach($cats as $cat): ?>
                     <li class="popular__filters-item filters__item">
-                        <a class="filters__button filters__button--photo button<?=$pageCat == 'photo'?'--active': ''?>" 
-                            href="../popular.php?page=<?=$pageNum?>&par=<?=$pagePar?>&con=photo">
-                            <span class="visually-hidden">Фото</span>
+                        <a class="filters__button filters__button--<?=$cat['class_name']?> filters__button<?=$pageCat == $cat['class_name']?'--active': ''?>" 
+                            href="../popular.php?page=<?=$pageNum?>&par=<?=$pagePar?>&con=<?=$cat['class_name']?>">
+                            <span class="visually-hidden"><?=$cat['name']?></span>
                             <svg class="filters__icon" width="22" height="18">
-                                <use xlink:href="#icon-filter-photo"></use>
+                                <use xlink:href="#icon-filter-<?=$cat['class_name']?>"></use>
                             </svg>
                         </a>
                     </li>
-                    <li class="popular__filters-item filters__item">
+                    <?php endforeach; ?>
+                    <!-- <li class="popular__filters-item filters__item">
                         <a class="filters__button filters__button--video button<?=$pageCat == 'video'?'--active': ''?>" 
                             href="../popular.php?page=<?=$pageNum?>&par=<?=$pagePar?>&con=video">
                             <span class="visually-hidden">Видео</span>
@@ -89,12 +91,12 @@
                                 <use xlink:href="#icon-filter-link"></use>
                             </svg>
                         </a>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
         </div>
         <div class="popular__posts">
-       <?=$postsContent?>
+             <?=$postsContent?>
         </div>
         <div class="popular__page-links">
             <?php if($pageNum > 0): ?>

@@ -35,20 +35,27 @@ switch($pagePar){
     break;
 }
 
-//if no category is chosen
+//Adding category restraint on to the query
 if ($pageCat == 'default'){
+    //if no category is chosen
     $stmnt = $con-> prepare($basic);
 } else{
-    //fix bindvalue adding '' around the variable
-    $basic = $basic.' WHERE content_type = :pageCat';
-    $stmnt = $con-> prepare($basic);
-    $stmnt->bindValue(':pageCat', $pageCat, PDO::PARAM_STR);
+    //inserting the category type between the join... line and the order by... line
+    $basic = explode("\n", $basic);
+    $basic1 = $basic[0].$basic[1].$basic[2];
+    $basic2 = $basic[3];
+    $stmnt = $con->prepare($basic1."WHERE content_type = '".$pageCat."'\n".$basic2);
+    //dd($stmnt);
 }
 
 $offset = $pageNum * 4;
 $stmnt->bindValue(':st', $offset, PDO::PARAM_INT);
 $stmnt->execute();
 $posts = $stmnt->fetchAll();
+
+//getting category names
+$stmnt = $con-> query('SELECT * FROM content_type');
+$cats = $stmnt->fetchAll();
 
 $postsContent = include_template("post-on-page-template.php", [
     'posts' => $posts,
@@ -61,7 +68,8 @@ $popularContent = include_template("pages/popular-template.php",
     'posts' => $posts,
     'pageNum' => $pageNum,
     'pageCat' => $pageCat,
-    'pagePar' => $pagePar
+    'pagePar' => $pagePar,
+    'cats' => $cats
 ]);
 
 $page = include_template("layout.php", [

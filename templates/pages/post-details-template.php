@@ -160,7 +160,8 @@
               </div>
             </div>
           </div>
-        <div class="post-details__user user">
+        <?=$profileTab?>
+        <!-- <div class="post-details__user user">
           <div class="post-details__user-info user__info">
             <div class="post-details__avatar user__avatar">
               <a class="post-details__avatar-link user__avatar-link" href="#">
@@ -168,7 +169,7 @@
               </a>
             </div>
             <div class="post-details__name-wrapper user__name-wrapper">
-              <a class="post-details__name user__name" href="#">
+              <a class="post-details__name user__name" href="profile.php?id=<?=$post['author']?>&par=posts">
                 <span><?= $post['login']?></span>
               </a>
               <time class="post-details__time user__time" datetime="<?=$comment['date_reg']?>">5 лет на сайте</time>
@@ -188,7 +189,7 @@
             <button class="user__button user__button--subscription button button--main" type="button">Подписаться</button>
             <a class="user__button user__button--writing button button--green" href="#">Сообщение</a>
           </div>
-        </div>
+        </div> -->
       </div>
     </section>
   </div>

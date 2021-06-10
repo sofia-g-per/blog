@@ -1,7 +1,7 @@
 <?php
 require_once("core/helpers.php");
 require_once("core/init.php");
-//$page = ""
+$page = "post-details";
 $postId = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT);
 
 //post info
@@ -15,6 +15,26 @@ $stmnt -> execute(['id'=>$postId]);
 $post = $stmnt -> fetch();
 //разбиение даты регистрации из единой строки в массив тип [year, month, day]??
 //$years = intval(date('Y')) -  substr($post['reg_date'], 0, 3);
+
+//getting the information about the user whose profile we are seeing
+$stmnt = $con->prepare('SELECT * FROM Users WHERE id = :id');
+$stmnt->execute(['id'=>$post['author']]);
+$author = $stmnt->fetch();
+//number of posts the user published
+$stmnt = $con->prepare(
+    'SELECT COUNT(*) as num
+    FROM Posts 
+    WHERE author = :id'
+);
+$stmnt->execute(['id'=>$post['author']]);
+$posts = $stmnt->fetch();
+$postsNum = $posts['num'];
+//amount of subscribers
+$stmnt = $con->prepare('SELECT COUNT(*) as num FROM Subscriptions WHERE user = :id');
+$stmnt->execute(['id'=>$post['author']]);
+$subs = $stmnt->fetch();
+$subsNum = $subs['num'];
+
 
 //adding one to the current post's view value
 $stmnt = $con->prepare(
@@ -33,20 +53,6 @@ $hashtags = $stmnt -> fetchAll();
 foreach($hashtags as $row_num=> $row){
     $hashtags[$row_num] = $row['hashtag'];
 }
-
-//follower number - fix!!
-$stmnt = $con->prepare('SELECT COUNT(*) AS num FROM Subscriptions WHERE user = :id');
-$stmnt -> execute(['id'=>$post['author']]);
-$followers = $stmnt -> fetch();
-//add for 0 followers + fix
-$followersNum = $followers['num'];
-
-//posts
-$stmnt = $con->prepare('SELECT COUNT(*) AS num FROM Posts WHERE author = :userID');
-$stmnt -> execute(['userID'=>$post['author']]);
-$user_posts = $stmnt -> fetch();
-$postsNum = $user_posts['num'];
-
 
 //comments
 //limit the ammount of comments visible
@@ -79,14 +85,21 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && empty($errors)){
 
     header('Location: post-details.php?id='.$newComment['post-id']);
 }
+
+$profileTab = include_template("profile-tab-template.php", [
+    'profile'=> $author,
+    'postsNum' => $postsNum,
+    'subsNum' => $subsNum,
+    'page' => $page
+]);
+
 $postContent = include_template("pages/post-details-template.php", [
     "errors" => $errors,
     "post" => $post,
     "hashtags" => $hashtags,
     "comments" => $comments,
-    "postsNum" => $postsNum,
-    "followersNum" => $followersNum,
     "commentsNum" => $commentsNum,
+    "profileTab" => $profileTab,
     "newComment" => $newComment
 ]);
 
