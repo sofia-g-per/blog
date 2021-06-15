@@ -115,7 +115,7 @@ function check_youtube_url($url)
         return "Видео по такой ссылке не найдено. Проверьте ссылку на видео";
     }
 
-    return true;
+    return false;
 }
 
 /**
@@ -218,7 +218,6 @@ function validateFilled($name){
 function validateEmail($name) {
     if (!filter_input(INPUT_POST, $name, FILTER_VALIDATE_EMAIL)) {
         return "Введите корректный email";
-
     }
 }
 
@@ -267,4 +266,105 @@ function dd($args){
     var_dump($args);
     echo "</pre>";
     die;
+}
+
+//для поиска в определенном ключе массива  типа [{"keyN"=>value}, {}, {}]
+//если она находит элемент, то возвращает индекс массива, в котром он находится
+function search_arr($arrname, $keyN, $value){
+
+    foreach($arrname as $key=>$arr){
+        if($arr[$keyN] == $value){
+            return $key;
+        }else{
+            return false;
+        }
+    }
+}
+
+//array_unshift для массивов типа [{},{},{}]
+
+
+//функция возвращает надпись о том, сколько времени назад была данная дата
+function ago($date){
+    //эквиваленты в секундах
+    $minute = 60;
+    $hour = 3600;
+    $day = 86400;
+    $week = 86400 * 7;
+    $month = 31536000 / 12; //количество секунд в год деленное на 12
+    $year = 31536000;
+
+    $dif = time() - strtotime($date); //разница во времени в секундах
+
+    //меньше минуты
+    if($dif < $minute){
+        return "совсем недавно";
+
+    //меньше часа (но больше минуты)
+    } elseif($dif < $hour){
+        $dif = intval($dif/$minute);
+        if($dif == 1){
+            return "минуту";
+        } elseif($dif < 5){
+            return $dif." минуты";
+        } else{
+            return $dif." минут";
+        }   
+
+    //меньше дня (несколько часов назад)
+    } elseif($dif < $day){
+        $dif = intval($dif/$hour);
+        if($dif == 1){
+            return "час";
+        } elseif($dif < 5){
+            return $dif." часа";
+        } else{
+            return $dif." часов";
+        }   
+
+    //меньше недели (несколько дней назад)
+    } elseif($dif < $week){
+        $dif = intval($dif/$day);
+        if($dif == 1){
+            return "1 день";
+        } elseif($dif < 5){
+            return $dif." дня";
+        } else{
+            return $dif." дней";
+        }   
+    
+    //меньше месяца (несколько недель назад)
+    } elseif($dif < $month){
+        $dif = intval($dif/$week);
+        if($dif == 1){
+            return "неделю";
+        } elseif($dif < 5){
+            return $dif." недели";
+        } else{
+            return $dif." недель";
+        }   
+    
+    //меньше года (несколько месяцев назад)
+    } elseif($dif < $year){
+        $dif = intval($dif/$month);
+        if($dif == 1){
+            return "месяц";
+        } elseif($dif < 5){
+            return $dif." месяца";
+        } else{
+            return $dif." месяцев";
+        }   
+
+    //несколько лет назад 
+    } else{
+        $dif = intval($dif/$year);
+        if($dif == 1){
+            return "год";
+        }elseif($dif < 5){
+            return $dif." года";
+        } else{
+            return $dif." лет";
+        }   
+    }
+    
 }

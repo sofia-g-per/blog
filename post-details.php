@@ -6,58 +6,62 @@ $postId = filter_input(INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT);
 
 //post info
 $stmnt = $con->prepare(
-    'SELECT p.* , u.login, u.profile_pic, u.reg_date 
+    "SELECT p.*, p.id as post, u.login, u.profile_pic, u.reg_date,
+        (SELECT GROUP_CONCAT(hashtag SEPARATOR ' ') 
+        FROM Hashtags h 
+        WHERE h.post_id = p.id) hashtags, 
+        (SELECT COUNT(*)
+        FROM Posts p WHERE original_post_id=post) repost_num,
+        (SELECT COUNT(*)
+        FROM Likes l WHERE l.post = p.id ) likes_num,
+        (SELECT COUNT(*)
+        FROM Comments c WHERE c.post = p.id ) comments_num
+
     FROM Posts p 
     JOIN Users u on u.id = p.author 
-    WHERE p.id = :id'
+    WHERE p.id = :id"
 );
 $stmnt -> execute(['id'=>$postId]);
 $post = $stmnt -> fetch();
+
+//превращение тэгов из строки в массив
+if($post['hashtags'] != NULL){
+    $posts[$key]['hashtags'] = explode(' ', $post['hashtags']); 
+} else{
+    unset($post['hashtags']);
+}
+
 //разбиение даты регистрации из единой строки в массив тип [year, month, day]??
 //$years = intval(date('Y')) -  substr($post['reg_date'], 0, 3);
 
-//getting the information about the user whose profile we are seeing
-$stmnt = $con->prepare('SELECT * FROM Users WHERE id = :id');
+//извлекаем информацию о создатели поста чтобы передать её в шаблон profile-tab
+$stmnt = $con->prepare(
+    "SELECT u.*,
+    (SELECT COUNT(*) FROM Posts p
+    WHERE p.author = u.id) postsNum,
+    (SELECT COUNT(*) FROM Subscriptions s
+    WHERE s.user = u.id) subsNum 
+    FROM Users u 
+    WHERE u.id = :id"
+);
 $stmnt->execute(['id'=>$post['author']]);
 $author = $stmnt->fetch();
-//number of posts the user published
-$stmnt = $con->prepare(
-    'SELECT COUNT(*) as num
-    FROM Posts 
-    WHERE author = :id'
-);
-$stmnt->execute(['id'=>$post['author']]);
-$posts = $stmnt->fetch();
-$postsNum = $posts['num'];
-//amount of subscribers
-$stmnt = $con->prepare('SELECT COUNT(*) as num FROM Subscriptions WHERE user = :id');
-$stmnt->execute(['id'=>$post['author']]);
-$subs = $stmnt->fetch();
-$subsNum = $subs['num'];
 
 
-//adding one to the current post's view value
-$stmnt = $con->prepare(
-    'UPDATE Posts SET views = views + 1
-    WHERE id = :id'
-);
-$stmnt -> execute(['id'=>$postId]);
-
-//hashtags
-$stmnt = $con->prepare('SELECT hashtag FROM Hashtags WHERE post_id = :id');
-$stmnt -> execute(['id'=>$postId]);
-$hashtags = $stmnt -> fetchAll();
-
-//преобразование массива из двумерного в одномерный
-//[[''=>ht], [], []]
-foreach($hashtags as $row_num=> $row){
-    $hashtags[$row_num] = $row['hashtag'];
+//добавление +1 просмотра на данный пост
+if($_SERVER['HTTP_CACHE_CONTROL'] != 'max-age=0'){
+    $stmnt = $con->prepare(
+        'UPDATE Posts SET views = views + 1
+        WHERE id = :id'
+    );
+    $stmnt -> execute(['id'=>$postId]);
 }
 
 //comments
 //limit the ammount of comments visible
 $stmnt = $con->prepare(
-    'SELECT * FROM Comments c JOIN Users u on c.author=u.id 
+    'SELECT * FROM Comments c 
+    JOIN Users u on c.author=u.id 
     WHERE c.post = :id
     ORDER BY date_created DESC
     LIMIT 0,2');
@@ -88,15 +92,13 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && empty($errors)){
 
 $profileTab = include_template("profile-tab-template.php", [
     'profile'=> $author,
-    'postsNum' => $postsNum,
-    'subsNum' => $subsNum,
     'page' => $page
 ]);
 
 $postContent = include_template("pages/post-details-template.php", [
     "errors" => $errors,
+    "page" => $page,
     "post" => $post,
-    "hashtags" => $hashtags,
     "comments" => $comments,
     "commentsNum" => $commentsNum,
     "profileTab" => $profileTab,
@@ -105,7 +107,8 @@ $postContent = include_template("pages/post-details-template.php", [
 
 $page = include_template("layout.php", [
     "content" => $postContent,
-    "isAuth" => $isAuth
+    "isAuth" => $isAuth,
+    "pgTitle" => 'публикация'
 ]);
 
 print($page);

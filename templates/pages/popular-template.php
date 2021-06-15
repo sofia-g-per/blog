@@ -17,7 +17,7 @@
                         </a>
                     </li>
                     <li class="sorting__item">
-                        <a class="sorting__link<?=$pagePar=='likes_num'?'--active':''?>"
+                        <a class="sorting__link sorting__link<?=$pagePar=='likes_num'?'--active':''?>"
                              href="popular.php?page=<?=$pageNum?>&par=likes_num&con=<?=$pageCat?>">
                             <span>Лайки</span>
                             <svg class="sorting__icon" width="10" height="12">
@@ -26,7 +26,7 @@
                         </a>
                     </li>
                     <li class="sorting__item">
-                        <a class="sorting__link<?=$pagePar=='reg_date'?'--active':''?>"
+                        <a class="sorting__link sorting__link<?=$pagePar=='reg_date'?'--active':''?>"
                             href="popular.php?page=<?=$pageNum?>&par=reg_date&con=<?=$pageCat?>">
                             <span>Дата</span>
                             <svg class="sorting__icon" width="10" height="12">
@@ -41,14 +41,14 @@
                 <ul class="popular__filters-list filters__list">
                     <li class="popular__filters-item popular__filters-item--all filters__item filters__item--all">
                         <a class="filters__button filters__button--ellipse filters__button--all filters__button<?=$pageCat == 'default'?'--active': ''?>" 
-                            href="../popular.php?page=<?=$pageNum?>&par=<?=$pagePar?>&con=default">
+                            href="popular.php?page=<?=$pageNum?>&par=<?=$pagePar?>&con=default">
                             <span>Все</span>
                         </a>
                     </li>
                     <?php foreach($cats as $cat): ?>
                     <li class="popular__filters-item filters__item">
                         <a class="filters__button filters__button--<?=$cat['class_name']?> filters__button<?=$pageCat == $cat['class_name']?'--active': ''?>" 
-                            href="../popular.php?page=<?=$pageNum?>&par=<?=$pagePar?>&con=<?=$cat['class_name']?>">
+                            href="popular.php?page=<?=$pageNum?>&par=<?=$pagePar?>&con=<?=$cat['class_name']?>">
                             <span class="visually-hidden"><?=$cat['name']?></span>
                             <svg class="filters__icon" width="22" height="18">
                                 <use xlink:href="#icon-filter-<?=$cat['class_name']?>"></use>
@@ -96,13 +96,21 @@
             </div>
         </div>
         <div class="popular__posts">
-             <?=$postsContent?>
+        <?php foreach($posts as $post): ?>
+            <?php
+                $postsContent = include_template("post-on-page-template.php", [
+                    'post' => $post,
+                    'page' => $page
+                ]);
+                print($postsContent);
+            ?>
+        <?php endforeach;?>
         </div>
         <div class="popular__page-links">
             <?php if($pageNum > 0): ?>
-                <a class="popular__page-link popular__page-link--prev button button--gray" href="../popular.php?page=<?= $pageNum-1?>&par=<?=$pagePar?>&con=<?=$pageCat?>">Предыдущая страница</a>
+                <a class="popular__page-link popular__page-link--prev button button--gray" href="popular.php?page=<?= $pageNum-1?>&par=<?=$pagePar?>&con=<?=$pageCat?>">Предыдущая страница</a>
             <?php endif;?>
-            <a class="popular__page-link popular__page-link--next button button--gray" href="../popular.php?page=<?=$pageNum+1?>&par=<?=$pagePar?>&con=<?=$pageCat?>">Следующая страница</a>
+            <a class="popular__page-link popular__page-link--next button button--gray" href="popular.php?page=<?=$pageNum+1?>&par=<?=$pagePar?>&con=<?=$pageCat?>">Следующая страница</a>
         </div>
     </div>
 </section>

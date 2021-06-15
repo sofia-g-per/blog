@@ -1,6 +1,7 @@
 <?php
 require_once("core/helpers.php");
 require_once("core/init.php");
+$page = "adding-post";
 
 if(!isset($_POST['content_type'])){
     $_POST['content_type'] = "photo";
@@ -143,9 +144,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && empty($errors)){
         break;
     }
     //hashtags
+    $postId = $con->lastInsertId();
     if (isset($_POST[$_POST['content_type'].'-tags'])){
 
-        $postId = $con->lastInsertId();
         $tags = explode(" ", $_POST[$_POST['content_type'].'-tags']);
 
         foreach($tags as $tag){
@@ -166,8 +167,10 @@ $addingPostcontent = include_template("pages/adding-post-template.php",[
     "errors" => $errors,
 ]);
 
-$page = include_template("layout.php", [
-    "content" => $addingPostcontent
+$page = include_template("adding-post-layout.php", [
+    "page" => $page,
+    "content" => $addingPostcontent,
+    "pgTitle" => 'добавление поста'
 ]);
 
 print($page);

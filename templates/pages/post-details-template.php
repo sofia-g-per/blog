@@ -5,71 +5,19 @@
       <h2 class="visually-hidden">Публикация</h2>
       <div class="post-details__wrapper post-<?=$post['content_type']?>">
         <div class="post-details__main-block post post--details">
-          <?php switch($post['content_type']):
-            case('quote'):?>
-              <!--содержимое для поста-цитата -->
-              <div class="post-details__image-wrapper post-photo__image-wrapper">
-                  <blockquote>
-                      <p>
-                          <?= $post['content'] ?>
-                      </p>
-                      <cite><?= $post['quote_author'] ?></cite>
-                  </blockquote>
-              </div>
-            <?php break; ?>
-            
-            <?php case('link'):?>
-                <!--содержимое для поста-ссылки-->
-                <div class="post-details__image-wrapper post-photo__image-wrapper">
-                    <a class="post-link__external" href="http://<?=$post['content']?>" title="Перейти по ссылке">
-                        <div class="post-link__info-wrapper">
-                            <div class="post-link__icon-wrapper">
-                                <img src="https://www.google.com/s2/favicons?domain=vitadental.ru" alt="Иконка">
-                            </div>
-                            <div class="post-link__info">
-                                <h3><?=$post['title'] ?></h3>
-                            </div>
-                        </div>
-                        <span><?=$post['content']?></span>
-                    </a>
-                </div>
-            <?php break; ?>
-
-            <?php case('photo'):?>
-                <!--содержимое для поста-фото-->
-                <div class="post-details__image-wrapper post-photo__image-wrapper">
-                    <img src="<?= $post['content']?>" alt="Фото от пользователя"width="760" height="507">
-                </div>
-            <?php break;?>
-            
-            <?php case('video'):?>
-                <!--содержимое для поста-видео-->
-                <!-- fix !!!!! -->
-                <div class="post-details__image-wrapper post-photo__image-wrapper">
-                    <div class="post-video__preview">
-                        <img src="img/coast-medium.jpg" alt="Превью к видео" width="760" height="507">
-                    </div>
-                    <a href="post-details.html" class="post-video__play-big button">
-                        <svg class="post-video__play-big-icon" width="14" height="14">
-                            <use xlink:href="#icon-video-play-big"></use>
-                        </svg>
-                        <span class="visually-hidden">Запустить проигрыватель</span>
-                    </a>
-                </div>
-            <?php break;
-            case('text'):?>
-              <div class="post-details__image-wrapper post-photo__image-wrapper">
-                <p> <?= $post['content']?></p>
-              </div>
-            <?php break;?>
-          <?php endswitch;?>
+          <?php 
+            $postDisplay = include_template("post-on-page-template.php", [
+                        'post' => $post,
+                        'page' => $page]);
+            print($postDisplay);
+          ?>
             <!--<div class="post-details__image-wrapper post-photo__image-wrapper">
               <img src="img/rock-default.jpg" alt="Фото от пользователя" width="760" height="507"> -->
-          <div class="post__indicators">
+          <!-- <div class="post__indicators">
             <div class="post__buttons">
               <form action="add-like.php">
                 <input type="text" class="visually-hidden" name="post-id" value="<?=$post['id']?>">
-                <!-- <input class="visually-hidden" name="like" type="text"> -->
+                
                 <button class="post__indicator post__indicator--likes button" type="submit" title="Лайк">
                   <svg class="post__indicator-icon" width="20" height="17">
                     <use xlink:href="#icon-heart"></use>
@@ -107,7 +55,7 @@
                   <li><a href="#">#<?= $hashtag?></a></li>
                 <?php endforeach; ?>
               </ul>
-            <? endif; ?>
+            <? endif; ?> -->
             <div class="comments">
               <form class="comments__form form" method="post">
                 <div class="comments__my-avatar">

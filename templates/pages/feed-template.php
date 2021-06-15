@@ -7,7 +7,14 @@
           <h2 class="visually-hidden">Лента</h2>
           <div class="feed__main-wrapper">
             <div class="feed__wrapper">
-              <?= $postDisplay?>
+
+            <?php foreach($posts as $post): 
+                  $postDisplay = include_template("post-on-page-template.php", [
+                      'post' => $post,
+                      'page' => $page
+                  ]);
+                  print($postDisplay);
+              endforeach;?>
               <!-- <article class="feed__post post post-photo">
                 <header class="post__header post__author">
                   <a class="post__author-link" href="#" title="Автор">
@@ -283,7 +290,7 @@
           </div>
           <ul class="feed__filters filters">
             <li class="feed__filters-item filters__item">
-              <a class="filters__button filters__button--ellipse filters__button--all <?$pageCat=='default'?"filters__button--active": "button"?>" 
+              <a class="filters__button<?=$pageCat == "all"?" filters__button--active": ""?>" 
                 href="feed.php?con=all">
                 <span>Все</span>
               </a>

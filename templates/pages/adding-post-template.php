@@ -171,7 +171,7 @@
                       <div class="adding-post__input-wrapper form__input-wrapper">
                         <label class="adding-post__label form__label" for="video-tags">Теги</label>
                         <div class="form__input-section <?= isset($errors['video-tags']) ? "form__input-section--error": ""?>">
-                          <input class="adding-post__input form__input" id="video-tags" type="text" name="photo-tags" placeholder="Введите ссылку">
+                          <input class="adding-post__input form__input" id="video-tags" type="text" name="video-tags" placeholder="Введите ссылку">
                           <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                           <div class="form__error-text">
                             <h3 class="form__error-title">Заголовок сообщения</h3>

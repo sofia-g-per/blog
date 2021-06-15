@@ -2,21 +2,12 @@
 require_once('core/init.php');
 
 //checking if the user is already subscribed to this profile
-$stmnt = $con->prepare(
-    'SELECT COUNT(*) as num
-    FROM subscriptions
-    WHERE user = :profile AND subscriber = :id'
-);
-$stmnt->execute([
-    'profile' => $_REQUEST['profileId'],
-    'id' => $_SESSION['user_id']
-]);
-$IsSubscribed = $stmnt->fetch();
-$IsSubscribed = $IsSubscribed['num'];
-
-if($IsSubscribed == 0){
+$IsSubscribed = array_search($_REQUEST['profileId'], $_SESSION['subs']);
+//если пользователь не подписан на этот профиль
+if($IsSubscribed === false){
     //checking if the user is trying to subscribe to themselves
     if($_REQUEST['profileId'] != $_SESSION['user_id']){
+        
         //subscribing
         $stmnt = $con->prepare(
             'INSERT INTO subscriptions
@@ -27,6 +18,7 @@ if($IsSubscribed == 0){
             'profile' => $_REQUEST['profileId'],
             'id' => $_SESSION['user_id']
         ]);
+        array_push($_SESSION['subs'], $_REQUEST['profileId']);
     }
 } else{
     //unsubscribing
@@ -38,9 +30,8 @@ if($IsSubscribed == 0){
         'profile' => $_REQUEST['profileId'],
         'id' => $_SESSION['user_id']
     ]);
-
+    unset($_SESSION['subs'][$IsSubscribed]);
 }
-
 
 header('Location: '.$_SERVER['HTTP_REFERER']);
 

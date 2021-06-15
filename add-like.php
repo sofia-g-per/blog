@@ -9,8 +9,10 @@ $stmnt->execute(
     ['user'=>$_SESSION['user_id'],
     'post'=>$_REQUEST['post-id']
 ]);
-$alreadyLiked = $stmnt->fetch();
-if(!$alreadyLiked){
+$alreadyLiked = array_search($_REQUEST['post-id'], $_SESSION['likes']);
+
+if($alreadyLiked !== true){
+    //добавление лайка
     $stmnt = $con->prepare(
         "UPDATE Posts 
         SET likes_num = likes_num + 1
@@ -27,7 +29,9 @@ if(!$alreadyLiked){
         'user'=>$_SESSION['user_id'],
         'post'=>$_REQUEST['post-id']
     ]);
+    array_push($_SESSION['likes'], $_REQUEST['post-id']);
 } else{
+    //unlike
     $stmnt = $con->prepare(
         "UPDATE Posts 
         SET likes_num = likes_num - 1
@@ -42,6 +46,8 @@ if(!$alreadyLiked){
     $stmnt->bindValue(':user', intval($_SESSION['user_id']), PDO::PARAM_INT);
     $stmnt->bindValue(':post', intval($_REQUEST['post-id']), PDO::PARAM_INT);
     $stmnt->execute();
+
+    unset($_SESSION['likes'][$alreadyLiked]);
 }
 
 header('Location: '.$_SERVER['HTTP_REFERER']);

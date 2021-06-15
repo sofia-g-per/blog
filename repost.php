@@ -42,4 +42,4 @@ $stmnt = $con->prepare(
      WHERE id =:id "
 );
 $stmnt->execute(['id'=>$_REQUEST['post-id']]);
-//header("Location: Выполнить переадресацию на страницу профиля текущего пользователя.");
+header("Location: profile.php?id=".$originalPost['author']."&par=posts");
