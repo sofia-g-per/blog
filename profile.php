@@ -74,7 +74,7 @@ foreach($posts as $key=>$post){
 //ЛАЙКИ
 //извлечение данных постов пользователя, которые недавно лайкали другие пользователи 
 $stmnt = $con->prepare(
-    'SELECT p.id, p.content, p.content_type, p.author, l.date_created, u.login, u.profile_pic
+    'SELECT p.id, p.content, p.content_type, p.author, l.date_created, u.login, u.profile_pic, l.user
     FROM Likes l
     INNER JOIN Posts p on l.post = p.id
     INNER JOIN Users u on l.user = u.id
@@ -84,7 +84,7 @@ $stmnt = $con->prepare(
 );
 $stmnt->execute(['id'=>$profId]);
 $likes = $stmnt->fetchAll();
-            
+
 //ПОДПИСКИ
 //извлечение данных профилей, на которые подписан пользователь
 $stmnt = $con->prepare(
@@ -103,6 +103,7 @@ $stmnt = $con->prepare(
 $stmnt->execute(['id'=>$profId]);
 $subs = $stmnt->fetchAll();
 
+//Формирование страницы
 $profileTab = include_template("profile-tab-template.php", [
     'profile'=> $profile,
     'page' => $page

@@ -31,7 +31,7 @@ $stmnt = $con->prepare($basic);
 $stmnt->execute(['id'=>$_SESSION['user_id']]);
 $posts = $stmnt->fetchAll();
 
-//превращение тэги из строки в массив
+//превращение тэгов из строки в массив
 foreach($posts as $key=>$post){
     if($post['hashtags'] != NULL){
         $posts[$key]['hashtags'] = explode(' ', $post['hashtags']); 

@@ -48,7 +48,7 @@
                     <?php foreach($cats as $cat): ?>
                     <li class="popular__filters-item filters__item">
                         <a class="filters__button filters__button--<?=$cat['class_name']?> filters__button<?=$pageCat == $cat['class_name']?'--active': ''?>" 
-                            href="popular.php?page=<?=$pageNum?>&par=<?=$pagePar?>&con=<?=$cat['class_name']?>">
+                            href="popular.php?page=0&par=views&con=<?=$cat['class_name']?>">
                             <span class="visually-hidden"><?=$cat['name']?></span>
                             <svg class="filters__icon" width="22" height="18">
                                 <use xlink:href="#icon-filter-<?=$cat['class_name']?>"></use>
@@ -96,22 +96,34 @@
             </div>
         </div>
         <div class="popular__posts">
-        <?php foreach($posts as $post): ?>
-            <?php
-                $postsContent = include_template("post-on-page-template.php", [
-                    'post' => $post,
-                    'page' => $page
-                ]);
+        
+        <?php if(empty($posts)){
+                $postsContent = include_template("no-posts-template.php");
                 print($postsContent);
-            ?>
-        <?php endforeach;?>
+            }else{
+                for($i = 0; $i < 6; $i++):
+                    if(!isset($posts[$i])){
+                        break;
+                    }
+                    $postsContent = include_template("post-on-page-template.php", [
+                        'post' => $posts[$i],
+                        'page' => $page
+                    ]);
+                    print($postsContent);
+                endfor;}?>
         </div>
+        <?php if (!empty($posts)):?>
         <div class="popular__page-links">
-            <?php if($pageNum > 0): ?>
-                <a class="popular__page-link popular__page-link--prev button button--gray" href="popular.php?page=<?= $pageNum-1?>&par=<?=$pagePar?>&con=<?=$pageCat?>">Предыдущая страница</a>
-            <?php endif;?>
-            <a class="popular__page-link popular__page-link--next button button--gray" href="popular.php?page=<?=$pageNum+1?>&par=<?=$pagePar?>&con=<?=$pageCat?>">Следующая страница</a>
+            <a class="popular__page-link popular__page-link--prev button button--gray" 
+            href="<?= $pageNum > 0? "popular.php?page=$pageNum-1?>&par=$pagePar&con=$pageCat" : "#"?>">
+                Предыдущая страница
+            </a>
+            <a class="popular__page-link popular__page-link--next button button--gray" 
+            href="<?="popular.php?page=$pageNum+1&par=$pagePar&con=$pageCat"?>">
+                Следующая страница
+            </a>
         </div>
+        <?php endif;?>
     </div>
 </section>
 

@@ -45,13 +45,13 @@
                       <li class="post-mini post-mini--<?=$like['content_type']?> post user">
                         <div class="post-mini__user-info user__info">
                           <div class="post-mini__avatar user__avatar">
-                            <a class="user__avatar-link" href="profile.php?id=<?=$like['author']?>&par=posts">
+                            <a class="user__avatar-link" href="profile.php?id=<?=$like['user']?>&par=posts">
                               <img class="post-mini__picture user__picture" src="<?=$like["profile_pic"]?>" alt="Аватар пользователя">
                             </a>
                           </div>
                           <div class="post-mini__name-wrapper user__name-wrapper">
-                            <a class="post-mini__name user__name" href="profile.php?id=<?=$like['author']?>&par=posts">
-                              <span><?=$post['login']?></span>
+                            <a class="post-mini__name user__name" href="profile.php?id=<?=$like['user']?>&par=posts">
+                              <span><?=$like['login']?></span>
                             </a>
                             <div class="post-mini__action">
                               <span class="post-mini__activity user__additional">Лайкнул вашу публикацию</span>
@@ -118,7 +118,7 @@
                           </div>
                           <div class="post-mini__name-wrapper user__name-wrapper">
                             <a class="post-mini__name user__name" href="profile.php?id=<?=$sub['id']?>&par=posts">
-                              <span><?=$post['login']?></span>
+                              <span><?=$sub['login']?></span>
                             </a>
                             <time class="post-mini__time user__additional" datetime="2014-03-20T20:20"><?=ago($sub['reg_date'])?> на сайте</time>
                           </div>

@@ -6,351 +6,81 @@
       <ul class="messages__contacts-list tabs__list">
         <?php foreach($convos as $key=>$convo):?>
           <li class="messages__contacts-item messages__contacts-item--new">
-          <form>
-            <input class="visually-hidden" type="text" name="active" value="<?=$key?>">
-            <button class="messages__contacts-tab tabs__item <?= $active==$key? "messages__contacts-tab--active tabs__item tabs__item--active" : "tabs_item"?>" 
-              href="messages.php?id=<?=$convo['id']?>">
+            <a href="messages.php?id=<?=$convo['id']?>"
+            class="messages__contacts-tab tabs__item <?= $active==$key? "messages__contacts-tab--active tabs__item tabs__item--active" : "tabs_item"?>">
               <div class="messages__avatar-wrapper">
                 <img class="messages__avatar" src="<?=$convo['profile_pic']?>" alt="Аватар пользователя">
-                <i class="messages__indicator">2</i>
+                <?php if($convo['unread_num']!= 0): ?>
+                  <i class="messages__indicator"><?=$convo['unread_num']?></i>
+                <?php endif;?>
               </div>
               <div class="messages__info">
                 <span class="messages__contact-name">
                   <?=$convo['login']?>
                 </span>
-                <?php if(!empty($dialogues[$key])):?>
-                  <div class="messages__preview">
+                <div class="messages__preview">
+                  <?php if(!empty($dialogues[$key])):?>
                     <p class="messages__preview-text">
-                      <?=$dialogues[$key][-1]['text']?>
+                      <?=$dialogues[$key][Count($dialogues[$key])-1]['text']?>
                     </p>
-                    <time class="messages__preview-time" datetime="<?=$dialogues[$key][-1]['date_created']?>">
-                      <?=$dialogues[$key][-1]['date_created']?>
+                    <time class="messages__preview-time" datetime="<?=$dialogues[$key][Count($dialogues[$key])-1]['date_created']?>">
+                      <?php $date = strtotime($dialogues[$key][Count($dialogues[$key])-1]['date_created'])?>
+                      <!-- если сообщение отправлено не в этот день, то выводится дата, в противном случае выводится время -->
+                      <?= strtotime(time()) - $date < (24 * 60 * 60)? date('H:i', $date):date('d.m.Y', $date)?>
                     </time>
-                  </div>
-                <?php endif;?>
+                  <?php endif;?>
+                </div>
               </div>
-            </button>
-          </form>
+            </a>
           </li>
         <?php endforeach;?>
-        <!-- <li class="messages__contacts-item">
-          <a class="messages__contacts-tab messages__contacts-tab--active tabs__item tabs__item--active" href="#">
-            <div class="messages__avatar-wrapper">
-              <img class="messages__avatar" src="img/userpic-larisa.jpg" alt="Аватар пользователя">
-            </div>
-            <div class="messages__info">
-              <span class="messages__contact-name">
-                Лариса Роговая
-              </span>
-              <div class="messages__preview">
-                <p class="messages__preview-text">
-                  Озеро Байкал – огромное
-                </p>
-                <time class="messages__preview-time" datetime="2019-05-01T14:40">
-                  14:40
-                </time>
-              </div>
-            </div>
-          </a>
-        </li> -->
-        <!--<li class="messages__contacts-item">
-          <a class="messages__contacts-tab tabs__item" href="#">
-            <div class="messages__avatar-wrapper">
-              <img class="messages__avatar" src="img/userpic-mark.jpg" alt="Аватар пользователя">
-            </div>
-            <div class="messages__info">
-              <span class="messages__contact-name">
-                Марк Смолов
-              </span>
-              <div class="messages__preview">
-                <p class="messages__preview-text">
-                  Вы: Марк, ждем тебя
-                </p>
-                <time class="messages__preview-time" datetime="2019-01-02T14:40">
-                  2 янв
-                </time>
-              </div>
-            </div>
-          </a>
-        </li>
-        <li class="messages__contacts-item">
-          <a class="messages__contacts-tab tabs__item" href="#">
-            <div class="messages__avatar-wrapper">
-              <img class="messages__avatar" src="img/userpic-tanya.jpg" alt="Аватар пользователя">
-            </div>
-            <div class="messages__info">
-              <span class="messages__contact-name">
-                Таня Фирсова
-              </span>
-              <div class="messages__preview">
-                <p class="messages__preview-text">
-                  Вы: Девушка не
-                </p>
-                <time class="messages__preview-time" datetime="2018-09-30T14:40">
-                  31 сент
-                </time>
-              </div>
-            </div>
-          </a>
-        </li> -->
       </ul>
     </div>
+    
     <div class="messages__chat">
       <div class="messages__chat-wrapper">
-      <?php foreach($dialogues as $dialogue):?>
-        <ul class="messages__list tabs__content tabs__content--active">
-          <?php foreach($dialogue as $message):?>
-            <li class="messages__item">
-              <div class="messages__info-wrapper">
-                <div class="messages__item-avatar">
-                  <a class="messages__author-link" href="#">
-                    <img class="messages__avatar" src="img/userpic-larisa-small.jpg" alt="Аватар пользователя">
-                  </a>
-                </div>
-                <div class="messages__item-info">
-                  <a class="messages__author" href="#">
-                    Лариса Роговая
-                  </a>
-                  <time class="messages__time" datetime="2019-05-01T14:40">
-                    1 ч назад
-                  </time>
-                </div>
-              </div>
-              <p class="messages__text">
-                Озеро Байкал – огромное древнее озеро в горах Сибири к северу от монгольской границы. Байкал считается самым глубоким озером в мире. Он окружен сетью пешеходных маршрутов, называемых Большой байкальской тропой. Деревня Листвянка, расположенная на западном берегу озера, – популярная отправная точка для летних экскурсий. Зимой здесь можно кататься на коньках и собачьих упряжках.
-              </p>
-            <?php endforeach;?>
-          </li>
-          <!-- <li class="messages__item messages__item--my">
-            <div class="messages__info-wrapper">
-              <div class="messages__item-avatar">
-                <a class="messages__author-link" href="#">
-                  <img class="messages__avatar" src="img/userpic-medium.jpg" alt="Аватар пользователя">
-                </a>
-              </div>
-              <div class="messages__item-info">
-                <a class="messages__author" href="#">
-                  Антон Глуханько
-                </a>
-                <time class="messages__time" datetime="2019-05-01T14:39">
-                  1 ч назад
-                </time>
-              </div>
-            </div>
-            <p class="messages__text">
-              Озеро Байкал – огромное древнее озеро в горах Сибири к северу от монгольской границы. Байкал считается самым глубоким озером в мире. Он окружен сетью пешеходных маршрутов, называемых Большой байкальской тропой. Деревня Листвянка, расположенная на западном берегу озера, – популярная отправная точка для летних экскурсий. Зимой здесь можно кататься на коньках и собачьих упряжках.
-            </p>
-          </li>
-          <li class="messages__item">
-            <div class="messages__info-wrapper">
-              <div class="messages__item-avatar">
-                <a class="messages__author-link" href="#">
-                  <img class="messages__avatar" src="img/userpic-larisa-small.jpg" alt="Аватар пользователя">
-                </a>
-              </div>
-              <div class="messages__item-info">
-                <a class="messages__author" href="#">
-                  Лариса Роговая
-                </a>
-                <time class="messages__time" datetime="2019-05-01T14:39">
-                  1 ч назад
-                </time>
+        
+        
+        <?php foreach($dialogues as $key=>$dialogue):?>
+          <?php if(!empty($dialogue)):?>
+            <ul class="messages__list tabs__content <?=$key==$active? "tabs__content--active": ""?>">
+
+              <?php foreach($dialogue as $message):?>
+                <li class="messages__item<?=$message['sender'] == $_SESSION['user_id']? " messages__item--my": ""?>">
+                  <div class="messages__info-wrapper">
+                    <div class="messages__item-avatar">
+                      <a class="messages__author-link" href="profile.php?id=<?=$message['sender']?>&par=posts">
+                        <img class="messages__avatar" src="<?=$message['profile_pic']?>" alt="Аватар пользователя">
+                      </a>
+                    </div>
+                    <div class="messages__item-info">
+                      <a class="messages__author" href="profile.php?id=<?=$message['sender']?>&par=posts">
+                        <?= $message['login']?>
+                      </a>
+                      <time class="messages__time" datetime="<?=$message['date_created']?>">
+                        <?=ago($message['date_created'])?> назад
+                      </time>
+                    </div>
+                  </div>
+                  <p class="messages__text">
+                    <?=$message['text']?>
+                  </p>
+                <?php endforeach;?>
+              </li>
+
+            </ul>
+            <!-- если диалог пустой, то есть у пользователей нет переписки -->
+          <?php else:?>
+            <div class="messages__list tabs__content <?=$key==$active? "tabs__content--active": ""?>">
+              <div class="no-messages__container">
+                <p class="search__no-results-info">У вас ещё нет сообщений с данным пользователем.</p>
+                <p class="search__no-results-desc">
+                  Будьте тем, кто напишет первым!
+                </p>
               </div>
             </div>
-            <p class="messages__text">
-              Озеро Байкал – огромное древнее озеро в горах Сибири к северу от монгольской границы. Байкал считается самым глубоким озером в мире. Он окружен сетью пешеходных маршрутов, называемых Большой байкальской тропой. Деревня Листвянка, расположенная на западном берегу озера, – популярная отправная точка для летних экскурсий. Зимой здесь можно кататься на коньках и собачьих упряжках.
-            </p>
-          </li> -->
-        </ul>
-        <ul class="messages__list tabs__content">
-          <li class="messages__item">
-            <div class="messages__info-wrapper">
-              <div class="messages__item-avatar">
-                <a class="messages__author-link" href="#">
-                  <img class="messages__avatar" src="img/userpic-larisa-small.jpg" alt="Аватар пользователя">
-                </a>
-              </div>
-              <div class="messages__item-info">
-                <a class="messages__author" href="#">
-                  Лариса Роговая
-                </a>
-                <time class="messages__time" datetime="2019-05-01T14:40">
-                  1 ч назад
-                </time>
-              </div>
-            </div>
-            <p class="messages__text">
-              Озеро Байкал – огромное древнее озеро в горах Сибири к северу от монгольской границы. Байкал считается самым глубоким озером в мире. Он окружен сетью пешеходных маршрутов, называемых Большой байкальской тропой. Деревня Листвянка, расположенная на западном берегу озера, – популярная отправная точка для летних экскурсий. Зимой здесь можно кататься на коньках и собачьих упряжках.
-            </p>
-          </li>
-          <li class="messages__item messages__item--my">
-            <div class="messages__info-wrapper">
-              <div class="messages__item-avatar">
-                <a class="messages__author-link" href="#">
-                  <img class="messages__avatar" src="img/userpic-medium.jpg" alt="Аватар пользователя">
-                </a>
-              </div>
-              <div class="messages__item-info">
-                <a class="messages__author" href="#">
-                  Антон Глуханько
-                </a>
-                <time class="messages__time" datetime="2019-05-01T14:39">
-                  1 ч назад
-                </time>
-              </div>
-            </div>
-            <p class="messages__text">
-              Озеро Байкал – огромное древнее озеро в горах Сибири к северу от монгольской границы. Байкал считается самым глубоким озером в мире. Он окружен сетью пешеходных маршрутов, называемых Большой байкальской тропой. Деревня Листвянка, расположенная на западном берегу озера, – популярная отправная точка для летних экскурсий. Зимой здесь можно кататься на коньках и собачьих упряжках.
-            </p>
-          </li>
-          <li class="messages__item">
-            <div class="messages__info-wrapper">
-              <div class="messages__item-avatar">
-                <a class="messages__author-link" href="#">
-                  <img class="messages__avatar" src="img/userpic-larisa-small.jpg" alt="Аватар пользователя">
-                </a>
-              </div>
-              <div class="messages__item-info">
-                <a class="messages__author" href="#">
-                  Лариса Роговая
-                </a>
-                <time class="messages__time" datetime="2019-05-01T14:39">
-                  1 ч назад
-                </time>
-              </div>
-            </div>
-            <p class="messages__text">
-              Озеро Байкал – огромное древнее озеро в горах Сибири к северу от монгольской границы. Байкал считается самым глубоким озером в мире. Он окружен сетью пешеходных маршрутов, называемых Большой байкальской тропой. Деревня Листвянка, расположенная на западном берегу озера, – популярная отправная точка для летних экскурсий. Зимой здесь можно кататься на коньках и собачьих упряжках.
-            </p>
-          </li>
-        </ul>
+          <?php endif;?>
         <?php endforeach;?>
-
-        <!-- <ul class="messages__list tabs__content">
-          <li class="messages__item">
-            <div class="messages__info-wrapper">
-              <div class="messages__item-avatar">
-                <a class="messages__author-link" href="#">
-                  <img class="messages__avatar" src="img/userpic-larisa-small.jpg" alt="Аватар пользователя">
-                </a>
-              </div>
-              <div class="messages__item-info">
-                <a class="messages__author" href="#">
-                  Лариса Роговая
-                </a>
-                <time class="messages__time" datetime="2019-05-01T14:40">
-                  1 ч назад
-                </time>
-              </div>
-            </div>
-            <p class="messages__text">
-              Озеро Байкал – огромное древнее озеро в горах Сибири к северу от монгольской границы. Байкал считается самым глубоким озером в мире. Он окружен сетью пешеходных маршрутов, называемых Большой байкальской тропой. Деревня Листвянка, расположенная на западном берегу озера, – популярная отправная точка для летних экскурсий. Зимой здесь можно кататься на коньках и собачьих упряжках.
-            </p>
-          </li>
-          <li class="messages__item messages__item--my">
-            <div class="messages__info-wrapper">
-              <div class="messages__item-avatar">
-                <a class="messages__author-link" href="#">
-                  <img class="messages__avatar" src="img/userpic-medium.jpg" alt="Аватар пользователя">
-                </a>
-              </div>
-              <div class="messages__item-info">
-                <a class="messages__author" href="#">
-                  Антон Глуханько
-                </a>
-                <time class="messages__time" datetime="2019-05-01T14:39">
-                  1 ч назад
-                </time>
-              </div>
-            </div>
-            <p class="messages__text">
-              Озеро Байкал – огромное древнее озеро в горах Сибири к северу от монгольской границы. Байкал считается самым глубоким озером в мире. Он окружен сетью пешеходных маршрутов, называемых Большой байкальской тропой. Деревня Листвянка, расположенная на западном берегу озера, – популярная отправная точка для летних экскурсий. Зимой здесь можно кататься на коньках и собачьих упряжках.
-            </p>
-          </li>
-          <li class="messages__item">
-            <div class="messages__info-wrapper">
-              <div class="messages__item-avatar">
-                <a class="messages__author-link" href="#">
-                  <img class="messages__avatar" src="img/userpic-larisa-small.jpg" alt="Аватар пользователя">
-                </a>
-              </div>
-              <div class="messages__item-info">
-                <a class="messages__author" href="#">
-                  Лариса Роговая
-                </a>
-                <time class="messages__time" datetime="2019-05-01T14:39">
-                  1 ч назад
-                </time>
-              </div>
-            </div>
-            <p class="messages__text">
-              Озеро Байкал – огромное древнее озеро в горах Сибири к северу от монгольской границы. Байкал считается самым глубоким озером в мире. Он окружен сетью пешеходных маршрутов, называемых Большой байкальской тропой. Деревня Листвянка, расположенная на западном берегу озера, – популярная отправная точка для летних экскурсий. Зимой здесь можно кататься на коньках и собачьих упряжках.
-            </p>
-          </li>
-        </ul>
-
-        <ul class="messages__list tabs__content">
-          <li class="messages__item">
-            <div class="messages__info-wrapper">
-              <div class="messages__item-avatar">
-                <a class="messages__author-link" href="#">
-                  <img class="messages__avatar" src="img/userpic-larisa-small.jpg" alt="Аватар пользователя">
-                </a>
-              </div>
-              <div class="messages__item-info">
-                <a class="messages__author" href="#">
-                  Лариса Роговая
-                </a>
-                <time class="messages__time" datetime="2019-05-01T14:40">
-                  1 ч назад
-                </time>
-              </div>
-            </div>
-            <p class="messages__text">
-              Озеро Байкал – огромное древнее озеро в горах Сибири к северу от монгольской границы. Байкал считается самым глубоким озером в мире. Он окружен сетью пешеходных маршрутов, называемых Большой байкальской тропой. Деревня Листвянка, расположенная на западном берегу озера, – популярная отправная точка для летних экскурсий. Зимой здесь можно кататься на коньках и собачьих упряжках.
-            </p>
-          </li>
-          <li class="messages__item messages__item--my">
-            <div class="messages__info-wrapper">
-              <div class="messages__item-avatar">
-                <a class="messages__author-link" href="#">
-                  <img class="messages__avatar" src="img/userpic-medium.jpg" alt="Аватар пользователя">
-                </a>
-              </div>
-              <div class="messages__item-info">
-                <a class="messages__author" href="#">
-                  Антон Глуханько
-                </a>
-                <time class="messages__time" datetime="2019-05-01T14:39">
-                  1 ч назад
-                </time>
-              </div>
-            </div>
-            <p class="messages__text">
-              Озеро Байкал – огромное древнее озеро в горах Сибири к северу от монгольской границы. Байкал считается самым глубоким озером в мире. Он окружен сетью пешеходных маршрутов, называемых Большой байкальской тропой. Деревня Листвянка, расположенная на западном берегу озера, – популярная отправная точка для летних экскурсий. Зимой здесь можно кататься на коньках и собачьих упряжках.
-            </p>
-          </li>
-          <li class="messages__item">
-            <div class="messages__info-wrapper">
-              <div class="messages__item-avatar">
-                <a class="messages__author-link" href="#">
-                  <img class="messages__avatar" src="img/userpic-larisa-small.jpg" alt="Аватар пользователя">
-                </a>
-              </div>
-              <div class="messages__item-info">
-                <a class="messages__author" href="#">
-                  Лариса Роговая
-                </a>
-                <time class="messages__time" datetime="2019-05-01T14:39">
-                  1 ч назад
-                </time>
-              </div>
-            </div>
-            <p class="messages__text">
-              Озеро Байкал – огромное древнее озеро в горах Сибири к северу от монгольской границы. Байкал считается самым глубоким озером в мире. Он окружен сетью пешеходных маршрутов, называемых Большой байкальской тропой. Деревня Листвянка, расположенная на западном берегу озера, – популярная отправная точка для летних экскурсий. Зимой здесь можно кататься на коньках и собачьих упряжках.
-            </p>
-          </li>
-        </ul> -->
       </div>
       <div class="comments">
       <form class="comments__form form" method="post">

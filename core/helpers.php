@@ -151,7 +151,7 @@ function embed_youtube_cover($youtube_url)
         $res = '<img alt="youtube cover" width="320" height="120" src="' . $src . '" />';
     }
 
-    return $res;
+    return $src;
 }
 
 /**
@@ -274,11 +274,14 @@ function search_arr($arrname, $keyN, $value){
 
     foreach($arrname as $key=>$arr){
         if($arr[$keyN] == $value){
-            return $key;
-        }else{
-            return false;
+            $res = $key;
+            break;
         }
     }
+    if(!isset($res)){
+        $res = false;
+    }
+    return $res;
 }
 
 //array_unshift для массивов типа [{},{},{}]

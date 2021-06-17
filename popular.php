@@ -27,19 +27,19 @@ JOIN Users u on u.id = p.author";
 //Добавления ограничения категории, если она выбрана
 if ($pageCat != 'default'){
 
-    $basic = $basic."WHERE content_type = '".$pageCat."'\n";
+    $basic = $basic."\nWHERE content_type = '".$pageCat."'\n";
 }
 //add if for last page 
 //добавления условия упорядывачивания постов согласно выбранному критерию (популярное (просмотры), лайки, дата ) 
-$basic = $basic." ORDER BY p.".$pagePar." DESC LIMIT :st , 10";
+$basic = $basic."\nORDER BY ".$pagePar." DESC LIMIT :st, 10";
 $stmnt = $con->prepare($basic);
 
-$offset = $pageNum * 10;
+$offset = $pageNum * 7;
 $stmnt->bindValue(':st', $offset, PDO::PARAM_INT);
 $stmnt->execute();
 $posts = $stmnt->fetchAll();
 
-//превращение тэги из строки в массив
+//превращение тэгов из строки в массив
 foreach($posts as $key=>$post){
     if($post['hashtags'] != NULL){
         $posts[$key]['hashtags'] = explode(' ', $post['hashtags']); 
@@ -48,13 +48,29 @@ foreach($posts as $key=>$post){
     }
 }
 
-//getting category names
+//для каждого репоста в массиве $posts заменяем значения 'original-author'
+//на массив с id, логином и аватаркой пользователя  
+foreach($posts as $key => $post){
+    if($post['repost']){
+        $stmnt = $con->prepare(
+            'SELECT id, login, profile_pic FROM Users
+            WHERE id = :original_author'
+        );
+        $stmnt->execute([
+            'original_author' => $post['original_author']
+        ]);
+        $posts[$key]['original_author'] = $stmnt->fetch();
+    }
+}
+
+//Извлечение всех названий категорий (типов контента) из БД
 $stmnt = $con-> query('SELECT * FROM content_type');
 $cats = $stmnt->fetchAll();
 
+//Формирование страницы
 $popularContent = include_template("pages/popular-template.php", 
 [
-    'posts' => $posts,
+    'posts' => $posts, 
     'page' => $page,
     'pageNum' => $pageNum,
     'pageCat' => $pageCat,

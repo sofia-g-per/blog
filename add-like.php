@@ -10,16 +10,8 @@ $stmnt->execute(
     'post'=>$_REQUEST['post-id']
 ]);
 $alreadyLiked = array_search($_REQUEST['post-id'], $_SESSION['likes']);
-
-if($alreadyLiked !== true){
-    //добавление лайка
-    $stmnt = $con->prepare(
-        "UPDATE Posts 
-        SET likes_num = likes_num + 1
-        WHERE id = :id"
-    );
-    $stmnt->execute(['id'=>$_REQUEST['post-id']]);
-    
+if($alreadyLiked === false){
+    //добавление лайка  
     $stmnt = $con->prepare(
         "INSERT INTO Likes 
         SET user = :user, post = :post"
@@ -31,14 +23,7 @@ if($alreadyLiked !== true){
     ]);
     array_push($_SESSION['likes'], $_REQUEST['post-id']);
 } else{
-    //unlike
-    $stmnt = $con->prepare(
-        "UPDATE Posts 
-        SET likes_num = likes_num - 1
-        WHERE id = :id"
-    );
-    $stmnt->execute(['id'=>$_REQUEST['post-id']]);
-    
+    //unlike  
     $stmnt = $con->prepare(
         "DELETE FROM Likes 
         WHERE user = :user AND post = :post"

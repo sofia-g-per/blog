@@ -31,6 +31,17 @@ if($post['hashtags'] != NULL){
     unset($post['hashtags']);
 }
 
+if($post['repost']){
+    $stmnt = $con->prepare(
+        'SELECT id, login, profile_pic FROM Users
+        WHERE id = :original_author'
+    );
+    $stmnt->execute([
+        'original_author' => $post['original_author']
+    ]); 
+    $post['original_author'] = $stmnt->fetch();
+}
+
 //разбиение даты регистрации из единой строки в массив тип [year, month, day]??
 //$years = intval(date('Y')) -  substr($post['reg_date'], 0, 3);
 
@@ -90,6 +101,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && empty($errors)){
     header('Location: post-details.php?id='.$newComment['post-id']);
 }
 
+//Формирование страницы
 $profileTab = include_template("profile-tab-template.php", [
     'profile'=> $author,
     'page' => $page

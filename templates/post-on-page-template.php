@@ -4,8 +4,8 @@
         case('popular'):?>
             <header class="post__header"> 
                 <h2>
-                    <a href='post-details.php?id=<?=$post['id']?>'> 
-                        <?=$post['title']?> 
+                    <a href='post-details.php?id=<?=$post['id']?>'>
+                        <?= !$post['repost']? $post['title'] : "Репост: ".$post['title']?> 
                     </a>
                 </h2>
             </header>
@@ -94,7 +94,7 @@
                 <!-- fix !!!!! -->
                 <div class="post-video__block">
                     <div class="post-video__preview">
-                        <?=embed_youtube_cover($post['content']); ?>
+                    <img alt="youtube cover" width="320" height="120" src="<?=embed_youtube_cover($post['content']); ?>">
                     </div>
                     <!-- <a href="post-details.php?id=<?=$post['id']?>" class="post-video__play-big button">
                         <svg class="post-video__play-big-icon" width="14" height="14">
@@ -150,7 +150,8 @@
                     </div>
                 </a>
             </div>
-        <?php endif;?>
+        <?php endif;?>   
+
             <div class="post__indicators">
                 <div class="post__buttons">
                     <form action="add-like.php">
