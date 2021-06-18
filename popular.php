@@ -44,7 +44,7 @@ foreach($posts as $key=>$post){
     if($post['hashtags'] != NULL){
         $posts[$key]['hashtags'] = explode(' ', $post['hashtags']); 
     } else{
-        unset($post['hashtags']);
+        unset($post[$key]['hashtags']);
     }
 }
 

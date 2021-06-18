@@ -34,7 +34,7 @@
                   </button>
                 <?php endif;?>
                 <a class="<?=$page?>__user-button user__button user__button--writing button button--green" 
-                  href="messages.php?id=<?=$profile['id']?>">
+                  href="messages.php?id=<?=$profile['id']?>&active=0">
                   Сообщение
                 </a>
               </form>

@@ -26,7 +26,7 @@ $post = $stmnt -> fetch();
 
 //превращение тэгов из строки в массив
 if($post['hashtags'] != NULL){
-    $posts[$key]['hashtags'] = explode(' ', $post['hashtags']); 
+    $post['hashtags'] = explode(' ', $post['hashtags']); 
 } else{
     unset($post['hashtags']);
 }
@@ -69,13 +69,11 @@ if($_SERVER['HTTP_CACHE_CONTROL'] != 'max-age=0'){
 }
 
 //comments
-//limit the ammount of comments visible
 $stmnt = $con->prepare(
     'SELECT * FROM Comments c 
     JOIN Users u on c.author=u.id 
     WHERE c.post = :id
-    ORDER BY date_created DESC
-    LIMIT 0,2');
+    ORDER BY date_created DESC');
 $stmnt -> execute(['id'=>$postId]);
 $comments = $stmnt -> fetchAll();
 $commentsNum = count($comments);

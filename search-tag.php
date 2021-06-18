@@ -1,12 +1,14 @@
-<?php
-require_once("core/helpers.php");
-require_once("core/init.php");
+<?php 
+require_once('core/init.php');
+require_once('core/helpers.php');
+$page = 'search';
 
-$page = 'feed';
-$pageCat = filter_input(INPUT_GET, 'con');
+$tag = filter_input(INPUT_GET, 'search', FILTER_SANITIZE_STRING);
+$tag = trim($tag);
+var_dump($tag);
 
-//посты пользователей, на которых подписан пользователь
-$basic = "SELECT p.*, p.id as post, u.login, u.profile_pic, 
+$stmnt = $con->prepare(
+    "SELECT p.*, p.id as post, u.id, u.login, u.profile_pic, 
         (SELECT GROUP_CONCAT(hashtag SEPARATOR ' ') 
         FROM Hashtags h 
         WHERE h.post_id = p.id) hashtags,
@@ -20,15 +22,10 @@ $basic = "SELECT p.*, p.id as post, u.login, u.profile_pic,
     FROM Posts p
     JOIN Subscriptions s on s.user = p.author
     JOIN Users u on p.author = u.id
-    WHERE s.subscriber = :id";
-//добавление категории к запросу, если она выбрана пользователем
-if($pageCat != 'all'){
-    $basic = $basic." AND p.content_type = '".$pageCat."'";  
-}
-
-$basic = $basic." ORDER BY date_created ASC LIMIT 0, 10";
-$stmnt = $con->prepare($basic);
-$stmnt->execute(['id'=>$_SESSION['user_id']]);
+    JOIN Hashtags h on h.post_id = p.id
+    WHERE MATCH(h.hashtag) AGAINST(:tag)"
+);
+$stmnt->execute(['tag'=> $tag]);
 $posts = $stmnt->fetchAll();
 
 //превращение тэгов из строки в массив
@@ -36,10 +33,9 @@ foreach($posts as $key=>$post){
     if($post['hashtags'] != NULL){
         $posts[$key]['hashtags'] = explode(' ', $post['hashtags']); 
     } else{
-        unset($posts[$key]['hashtags']);
+        unset($post['hashtags']);
     }
 }
-
 //для каждого репоста в массиве $posts заменяем значения 'original-author'
 //на массив с id, логином и аватаркой пользователя  
 foreach($posts as $key => $post){
@@ -54,23 +50,19 @@ foreach($posts as $key => $post){
         $posts[$key]['original_author'] = $stmnt->fetch();
     }
 }
-//all author info can be accessed via $post['original_author']['info needed']
+//var_dump($posts);
 
-
-//getting category names
-$stmnt = $con-> query('SELECT * FROM content_type');
-$cats = $stmnt->fetchAll();
-
-$feedContent = include_template("pages/feed-template.php",[
+//Формирование страницы
+$searchContent = include_template('pages/search-results-template.php', [
     'posts' => $posts,
     'page' => $page,
-    'pageCat' => $pageCat,
-    'cats' => $cats
+    'search' => '#'.$tag
 ]);
 
-$page = include_template("layout.php", [
-    "content" => $feedContent,
-    "pgTitle" => 'моя лента'
+$page = include_template('layout.php', [
+    'content' => $searchContent,
+    'page' => $page,
+    'pgTitle' => 'страница результов поиска'
 ]);
 
 print($page);

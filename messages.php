@@ -8,11 +8,11 @@ require_once('core/helpers.php');
 //то значение равно 0
 $rcpId = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT); //receipient id 
 
+$active = filter_input(INPUT_GET, 'active', FILTER_SANITIZE_NUMBER_INT); //id of active dialogue in convos 
+
 if(isset($_POST['active'])){
     $active = $_POST['active']; //переменная, указывающая индекс открытого диалога в массиве $convos
-} else{
-    $active = 0;
-}
+} 
 
 //fix dialogues ordered not by last message but by date created
 //создание списка последних людей, с которыми общался пользователь
@@ -29,6 +29,7 @@ $stmnt = $con->prepare(
 
 $stmnt->execute(['id' => $_SESSION['user_id']]);
 $convos = $stmnt->fetchAll();
+//dd($convos);
 //удаление информации о зарегистрированном пользователе и присваивание id другого пользователя под ключ id
 foreach($convos as $key=>$row){
     if($row['user1'] != $_SESSION['user_id']){
@@ -49,6 +50,9 @@ foreach($convos as $key=>$row){
     $temp = $stmnt->fetch();
     $convos[$key] = array_merge($convos[$key],$temp);
 }
+//dd($convos);
+
+$dialogueExists = true; //обозначает существует ли в БД диалог с этим пользователем (используется при отправки сообщения)
 
 //Добавление в массив пользователя со страницы, которого был совершён переход на данную
 //если страница была открыта не через меню "мои сообщения"
@@ -57,6 +61,7 @@ if($rcpId != 0){
 
     //если аккаунт, с которого пользователей перешёл уже входит в диалоги (массив $convos)
     if($rcpIndex !== false){ 
+
         $rcp = $convos[$rcpIndex];
         unset($convos[$rcpIndex]);
         //ставим его на первое место 
@@ -68,6 +73,7 @@ if($rcpId != 0){
         }
         $convos = $convosTemp;
     } else{
+        $dialogueExists = false; //обозначает существует ли в БД диалог с этим пользователем (используется при отправки сообщения)
         $stmnt = $con->prepare(
             'SELECT u.id, u.login, u.profile_pic
             FROM Users u 
@@ -81,19 +87,18 @@ if($rcpId != 0){
         if(empty($convos)){
             $convos[0] = $rcp;
         }else{
-            $convos = array_unshift($convos, $rcp);
+            array_unshift($convos, []);
+            $convos[0] = $rcp + $convos[0];
         }
+    }
+
+    //если страница открывается с профиля другого пользователя(нажатием кнопки сообщение),
+    //то активный становится диалог с этим пользователем
+    if($active === NULL){
+        $active = 0;
     }
 }
 //dd($convos);
-
-//Не прочитанные сообщения в активном диалоге становятся прочитанными
-$stmnt = $con->prepare(
-    "UPDATE Messages m
-    SET m.read = 1
-    WHERE dialogue_id = :d_id AND m.read = 0"
-);
-$stmnt->execute(['d_id' => $convos[$active]['dialogue_id']]);
 
 //Извлечение сообщений каждого из диалогов 
 $dialogues = [];
@@ -115,6 +120,39 @@ foreach($convos as $convo){
 }
 array_filter($dialogues);
 
+//если на экране отображается диалог 
+
+if($active !== NULL && !empty($dialogues[$active])){
+
+    $unread = search_arr($dialogues[$active], "read", 0); //индекс первого не прочитанного сообщения в мссиве диалога с данным пользователем
+    
+    //если в активном диалоге есть непрочитанные сообщения не от самого пользователя,
+    //они становятся прочитанными
+    if($unread !==NULL && $dialogues[$active][$unread]['sender']!= $_SESSION['user_id']){
+        //подсчёт количества непрочитанных сообщений от данного пользователя
+        $stmnt = $con->prepare(
+            "SELECT COUNT(*) as num
+            FROM Messages m
+            WHERE dialogue_id = :d_id  AND m.read = 0 AND m.sender != :id;"
+        );
+        $stmnt->execute([
+            'id' => $_SESSION['user_id'],
+            'd_id' => $convos[$active]['dialogue_id']
+        ]);
+        $num = $stmnt->fetch();
+        $num = $num['num'];
+        $_SESSION['unread_num'] -= $num;
+
+        $stmnt = $con->prepare(
+            "UPDATE Messages m
+            SET m.read = 1
+            WHERE dialogue_id = :d_id AND m.read = 0"
+        );
+        $stmnt->execute(['d_id' => $convos[$active]['dialogue_id']]);
+
+        
+    }
+}
 
 //Отправка сообщения
 $error = '';
@@ -131,19 +169,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && $error != NULL){
         text = :text,
         dialogue_id = :d_id "
     );
-    //Проерка есть ли у зарег пользователя диалог с этим пользователем
-    $stmnt = $con->prepare(
-        "SELECT id
-        FROM dialogues
-        WHERE (user1 = :user AND user2 = :rcp) OR (user1 = :rcp AND user2 = :user)"
-    );
-    $stmnt->execute([
-        'user' => $_SESSION['user_id'],
-        'rcp' => $_POST['receipient']
-    ]);
-    $d_id = $stmnt->fetch();
-
-    if(Count($d_id) == 0){
+    //Если у пользователя нет диалога с данным аккаунтом, то он создаётся
+    if(!$dialogueExists){
         $stmnt = $con->prepare(
             "INSERT INTO dialogues 
             SET user1 = :user,
@@ -155,7 +182,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && $error != NULL){
         ]);
         $d_id = $con->lastInsertId();
     } else{
-        $d_id = $d_id['id'];
+        $d_id = $convos[$active]['dialogue_id'];
     }
     
     $message->execute([
@@ -168,9 +195,11 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && $error != NULL){
     header('Location: '.$_SERVER['HTTP_REFERER']);
 }
 
+//Формирование страницы
 $messagesContent = include_template("pages/messages-template.php", [
     'convos' => $convos,
     'active' => $active,
+    'rcpId'=> $rcpId,
     'dialogues' => $dialogues,
     'error' => $error
 ]);

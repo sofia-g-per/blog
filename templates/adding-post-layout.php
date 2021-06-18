@@ -22,10 +22,10 @@
             micro blogging
           </p>
         </div>
-        <form class="header__search-form form" action="#" method="get">
+        <form class="header__search-form form" action="search.php" method="get">
           <div class="header__search">
             <label class="visually-hidden">Поиск</label>
-            <input class="header__search-input form__input" type="search">
+            <input class="header__search-input form__input" name="search" type="search">
             <button class="header__search-button button" type="submit">
               <svg class="header__search-icon" width="18" height="18">
                 <use xlink:href="#icon-search"></use>
@@ -70,60 +70,42 @@
                     </a>
                     <div class="header__tooltip-wrapper">
                         <div class="header__profile-tooltip">
-                        <ul class="header__user-nav">
-                            <li class="header__profile">
-                                <a class="header__profile-link" href="#">
-                                    <div class="header__avatar-wrapper">
-                                        <img class="header__profile-avatar" src="<?= $_SESSION['profile_pic']?>" alt="Аватар профиля">
-                                    </div>
-                                    <div class="header__profile-name">
-                                        <span>
-                                        <?= $_SESSION['login'] ?>   
+                            <ul class="header__profile-nav">
+                                <li class="header__profile-nav-item">
+                                    <a class="header__profile-nav-link" href="profile.php?id=<?=$_SESSION['user_id']?>&par=posts">
+                                        <span class="header__profile-nav-text">
+                                            Мой профиль
                                         </span>
-                                        <svg class="header__link-arrow" width="10" height="6">
-                                            <use xlink:href="#icon-arrow-right-ad"></use>
-                                        </svg>
-                                    </div>
-                                </a>
-                                <div class="header__tooltip-wrapper">
-                                    <div class="header__profile-tooltip">
-                                        <ul class="header__profile-nav">
-                                            <li class="header__profile-nav-item">
-                                                <a class="header__profile-nav-link" href="profile.php?id=<?=$_SESSION['user_id']?>&par=posts">
-                                                    <span class="header__profile-nav-text">
-                                                        Мой профиль
-                                                    </span>
-                                                </a>
-                                            </li>
-                                            <li class="header__profile-nav-item">
-                                                <a class="header__profile-nav-link" href="messages.php?id=0">
-                                                    <span class="header__profile-nav-text">
-                                                        Сообщения
-                                                        <i class="header__profile-indicator">2</i>
-                                                    </span>
-                                                </a>
-                                            </li>
+                                    </a>
+                                </li>
+                                <li class="header__profile-nav-item">
+                                    <a class="header__profile-nav-link" href="messages.php?id=0">
+                                        <span class="header__profile-nav-text">
+                                            Сообщения
+                                            <?php if($_SESSION['unread_num']!= 0):?>
+                                                <i class="header__profile-indicator">
+                                                    <?=$_SESSION['unread_num']?>
+                                                </i>
+                                            <?php endif;?>
+                                        </span>
+                                    </a>
+                                </li>
 
-                                            <li class="header__profile-nav-item">
-                                                <a class="header__profile-nav-link" href="main.php">
-                                                    <span class="header__profile-nav-text">
-                                                        Выход
-                                                    </span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </li>
-                            <li>
-                                <a class="header__post-button button button--transparent" href="adding-post.php">Пост</a>
-                            </li>
-                        </ul>
+                                <li class="header__profile-nav-item">
+                                    <a class="header__profile-nav-link" href="main.php">
+                                        <span class="header__profile-nav-text">
+                                            Выход
+                                        </span>
+                                    </a>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </li>
                 <li>
-                    <a class="header__post-button header__post-button--active button button--transparent" href="feed.php?con=all">Закрыть</a>
+                    <a class="header__post-button header__post-button--active button button--transparent" href="feed.php?con=all">
+                        Закрыть
+                    </a>
                 </li>
             </ul>
           </nav>

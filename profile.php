@@ -70,6 +70,18 @@ foreach($posts as $key=>$post){
         unset($post['hashtags']);
     }
 }
+$comments = [];
+if(isset($_GET['comments'])){
+    $commentsPost = filter_input(INPUT_GET, 'comments', FILTER_SANITIZE_NUMBER_INT);
+    $stmnt = $con->prepare(
+        "SELECT * FROM Comments c
+        JOIN Users u on u.id = c.author
+        WHERE c.post = :id"
+    );
+    $stmnt->execute(["id" => $commentsPost]);
+    $comments = $stmnt->fetchAll();
+
+}
 
 //ЛАЙКИ
 //извлечение данных постов пользователя, которые недавно лайкали другие пользователи 
@@ -103,6 +115,27 @@ $stmnt = $con->prepare(
 $stmnt->execute(['id'=>$profId]);
 $subs = $stmnt->fetchAll();
 
+//creating a new comment
+$errors =[];
+$newComment = $_POST;
+if($_SERVER['REQUEST_METHOD'] == 'POST'){
+    //dd($newComment);
+    $text = trim($newComment['text']);
+    $errors['text'] = validateFilled('text');
+    $errors = array_filter($errors);
+}
+
+if($_SERVER['REQUEST_METHOD'] == 'POST' && empty($errors)){
+    $stmnt = $con->prepare("INSERT INTO Comments SET text = :text, author = :user, post = :post");
+    $stmnt->execute([
+        'text' => $newComment['text'],
+        'user' => $_SESSION['user_id'],
+        'post' => $newComment['post-id']
+    ]);
+
+    header('Location: '.$_SERVER['HTTP_REFERER']);
+}
+
 //Формирование страницы
 $profileTab = include_template("profile-tab-template.php", [
     'profile'=> $profile,
@@ -113,11 +146,12 @@ $profileContent = include_template("pages/profile-template.php", [
     'posts' => $posts,
     'likes' => $likes,
     'subs' => $subs,
-    'profile'=> $profile,
     'page' => $page,
     'pagePar' => $pagePar,
+    'profile'=> $profile,
     'profileTab' => $profileTab,
-    'profile' => $profile
+    'comments' => $comments,
+    'errors' => $errors
 ]);
 
 $page = include_template("layout.php", [

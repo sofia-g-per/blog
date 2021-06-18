@@ -139,13 +139,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && empty($errors)){
             'author' => $_SESSION['user_id'],
             'content_type' => $_POST['content_type']
         ];
-
         $stmnt->execute($arr);
         break;
     }
     //hashtags
     $postId = $con->lastInsertId();
-    if (isset($_POST[$_POST['content_type'].'-tags'])){
+    if (isset($_POST[$_POST['content_type'].'-tags']) && ValidateFilled($_POST['content_type'].'-tags') == NULL){
 
         $tags = explode(" ", $_POST[$_POST['content_type'].'-tags']);
 
@@ -161,6 +160,28 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && empty($errors)){
         }
     }
     header("Location: post-details.php?id=$postId");
+
+    //отправка уведомления (закоментирована, так как используются не настоящие email адреса)
+    /* $stmnt = $con->prepare(
+        "SELECT s.subscriber, u.login, u.email
+        FROM Subscribers
+        JOIN Users u ON s.subscriber = u.id
+        WHERE s.user = :id"
+    );
+    $stmnt->execute(['id' => $_REQUEST['profileId']]);
+    $subscribers = $stmnt->fetchAll(); //массив с данными акканта, на который подписался пользователь
+    foreach($subscribers as $subscriber){
+        mail(
+            $subscriber['email'],
+
+            "Новая публикация от пользователя ".$_SESSION['login'],
+
+            "Здравствуйте,".$subscriber['login'].".\n
+            Пользователь ".$_SESSION['login']." только что
+            опубликовал новую запись „".$_POST[$_POST['content_type'].'-heading']."“.\n 
+            Посмотрите её на странице пользователя: <a href=http://practica/profile.php?id=".$_SESSION['user_id']."&par=posts></a>"
+        ); 
+    }*/
 } 
 
 $addingPostcontent = include_template("pages/adding-post-template.php",[

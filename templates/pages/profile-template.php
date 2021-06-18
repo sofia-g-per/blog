@@ -32,7 +32,9 @@
                   $postDisplay = include_template("post-on-page-template.php", [
                             'post' => $post,
                             'profile'=> $profile,
-                            'page' => $page
+                            'page' => $page,
+                            'comments' => $comments,
+                            'errors' => $errors
                         ]); 
                       print($postDisplay);
                       } ?>

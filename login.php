@@ -32,7 +32,11 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && empty($errors)){
         WHERE subscriber = u.id) subs, 
         (SELECT GROUP_CONCAT(l.post SEPARATOR ' ')
         FROM Likes l
-        WHERE l.user = u.id) likes
+        WHERE l.user = u.id) likes,
+        (SELECT COUNT(*)
+        FROM Messages m
+        WHERE m.receipient = u.id 
+        AND m.read = 0) unread_num
         
         FROM Users u 
         WHERE email=:email"
@@ -48,8 +52,11 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && empty($errors)){
             $_SESSION['user_id'] = $dbUser['id'];
             $_SESSION['login'] = $dbUser['login'];
             $_SESSION['profile_pic'] = $dbUser['profile_pic'];
+            //$_SESSION['email'] = $dbUser['email'];
             $_SESSION['subs'] = explode(' ', $dbUser['subs']); //массив id пользователей, на которых подписан зарег пользователей
             $_SESSION['likes'] = explode(' ', $dbUser['likes']); //массив id постов, которые лайкнул зарег пользователей
+            $_SESSION['unread_num'] = $dbUser['unread_num']; //количество непрочитанных сообщений у пользователя 
+            
             header("Location: popular.php?page=0&par=views&con=default");
         }
         else{

@@ -6,8 +6,8 @@
       <ul class="messages__contacts-list tabs__list">
         <?php foreach($convos as $key=>$convo):?>
           <li class="messages__contacts-item messages__contacts-item--new">
-            <a href="messages.php?id=<?=$convo['id']?>"
-            class="messages__contacts-tab tabs__item <?= $active==$key? "messages__contacts-tab--active tabs__item tabs__item--active" : "tabs_item"?>">
+            <a href="messages.php?id=<?=$rcpId?>&active=<?=$key?>"
+            class="messages__contacts-tab tabs__item <?= $active===strval($key)? "messages__contacts-tab--active tabs__item tabs__item--active" : "tabs_item"?>">
               <div class="messages__avatar-wrapper">
                 <img class="messages__avatar" src="<?=$convo['profile_pic']?>" alt="Аватар пользователя">
                 <?php if($convo['unread_num']!= 0): ?>
@@ -36,14 +36,12 @@
         <?php endforeach;?>
       </ul>
     </div>
-    
+  
     <div class="messages__chat">
-      <div class="messages__chat-wrapper">
-        
-        
+      <div class="<?=$active !== NULL?"messages__chat-wrapper": "visually-hidden"?>">
         <?php foreach($dialogues as $key=>$dialogue):?>
           <?php if(!empty($dialogue)):?>
-            <ul class="messages__list tabs__content <?=$key==$active? "tabs__content--active": ""?>">
+            <ul class="messages__list tabs__content <?=strval($key)===$active? "tabs__content--active": ""?>">
 
               <?php foreach($dialogue as $message):?>
                 <li class="messages__item<?=$message['sender'] == $_SESSION['user_id']? " messages__item--my": ""?>">
@@ -82,7 +80,7 @@
           <?php endif;?>
         <?php endforeach;?>
       </div>
-      <div class="comments">
+      <div class="<?=$active !== NULL?"comments": "visually-hidden"?>">
       <form class="comments__form form" method="post">
         <div class="comments__my-avatar">
           <img class="comments__picture" src="<?=$_SESSION['profile_pic']?>" alt="Аватар пользователя">

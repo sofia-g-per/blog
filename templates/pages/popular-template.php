@@ -27,7 +27,7 @@
                     </li>
                     <li class="sorting__item">
                         <a class="sorting__link sorting__link<?=$pagePar=='reg_date'?'--active':''?>"
-                            href="popular.php?page=<?=$pageNum?>&par=reg_date&con=<?=$pageCat?>">
+                            href="popular.php?page=<?=$pageNum?>&par=date_created&con=<?=$pageCat?>">
                             <span>Дата</span>
                             <svg class="sorting__icon" width="10" height="12">
                                 <use xlink:href="#icon-sort"></use>

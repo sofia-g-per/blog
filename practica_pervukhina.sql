@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Июн 16 2021 г., 19:47
+-- Время создания: Июн 17 2021 г., 19:38
 -- Версия сервера: 8.0.19
 -- Версия PHP: 7.1.33
 
@@ -87,7 +87,8 @@ CREATE TABLE `dialogues` (
 
 INSERT INTO `dialogues` (`id`, `user1`, `user2`, `date_created`) VALUES
 (4, 3, 1, '2021-06-16 17:56:47'),
-(5, 4, 3, '2021-06-16 19:04:15');
+(5, 4, 3, '2021-06-16 19:04:15'),
+(7, 3, 5, '2021-06-17 17:09:22');
 
 -- --------------------------------------------------------
 
@@ -112,7 +113,13 @@ INSERT INTO `hashtags` (`post_id`, `hashtag`) VALUES
 (12, 'sad'),
 (12, 'snek'),
 (12, 'sadsnekissad'),
-(13, 'hi');
+(13, 'hi'),
+(20, 'snake'),
+(20, 'snek'),
+(21, 'snake'),
+(21, 'snek'),
+(22, ''),
+(23, '');
 
 -- --------------------------------------------------------
 
@@ -163,7 +170,10 @@ CREATE TABLE `messages` (
 INSERT INTO `messages` (`id`, `date_created`, `sender`, `receipient`, `text`, `read`, `dialogue_id`) VALUES
 (1, '2021-06-16 17:56:47', 3, 1, 'Hello!', 1, 4),
 (2, '2021-06-16 19:04:15', 4, 3, 'Hey!', 1, 5),
-(4, '2021-06-16 19:44:49', 3, 4, 'Hey back!', 1, 5);
+(4, '2021-06-16 19:44:49', 3, 4, 'Hey back!', 1, 5),
+(5, '2021-06-17 17:09:22', 3, 5, 'Why are there so many snakes on this site?', 1, 7),
+(6, '2021-06-17 17:32:04', 3, 5, 'Why?', 1, 7),
+(9, '2021-06-17 18:32:33', 3, 1, 'Please don\'t ignore me', 0, 4);
 
 -- --------------------------------------------------------
 
@@ -194,15 +204,19 @@ INSERT INTO `posts` (`id`, `date_created`, `title`, `content`, `views`, `author`
 (2, '2021-06-04 12:41:52', 'My second post', 'Yay!', 1, 1, 'text', NULL, 0, NULL, NULL),
 (3, '2021-06-04 12:45:01', 'Pain', 'uploads/60b9f61d0adf3Снимок экрана 2021-05-14 111142.jpg', 5, 1, 'photo', NULL, 0, NULL, NULL),
 (6, '2021-06-04 12:48:52', 'sad snek', 'uploads/60b9f704aa3fdsad snek.jpg', 1, 1, 'photo', NULL, 0, NULL, NULL),
-(8, '2021-06-04 13:03:42', 'Фотография', 'uploads/60b9fa7e868basad snek.jpg', 112, 1, 'photo', NULL, 0, NULL, NULL),
+(8, '2021-06-04 13:03:42', 'A photo of me', 'uploads/60b9fa7e868basad snek.jpg', 113, 1, 'photo', NULL, 0, NULL, NULL),
 (9, '2021-06-04 13:16:48', 'Великие высказывания великих людей', 'Сложно жить, когда жить сложно', 61, 1, 'quote', 'Панфилова М.Ю.', 0, NULL, NULL),
-(10, '2021-06-04 13:32:58', 'Add a post!', 'http://practica/adding-post.php', 34, 1, 'link', NULL, 0, NULL, NULL),
-(12, '2021-06-04 14:45:03', 'Return of sad snek', 'uploads/60ba123f66abfsad snek.jpg', 7, 1, 'photo', NULL, 0, NULL, NULL),
+(10, '2021-06-04 13:32:58', 'Add a post!', 'http://practica/adding-post.php', 37, 1, 'link', NULL, 0, NULL, NULL),
+(12, '2021-06-04 14:45:03', 'Return of sad snek', 'uploads/60ba123f66abfsad snek.jpg', 8, 1, 'photo', NULL, 0, NULL, NULL),
 (13, '2021-06-04 15:16:51', 'Hello', 'uploads/60ba19b3a3bfbsad snek.jpg', 0, 1, 'photo', NULL, 0, NULL, NULL),
 (14, '2021-06-08 13:33:10', 'Великие высказывания великих людей', 'Сложно жить, когда жить сложно', 2, 3, 'quote', 'Панфилова М.Ю.', 1, 1, 9),
 (15, '2021-06-11 17:52:20', 'Alan! Alan!', 'https://www.youtube.com/watch?v=xaPepCVepCg&list=PLGy6F-Kml5BV4S0E8axqixqvVbL3hV27O&index=221', 16, 5, 'video', NULL, 0, NULL, NULL),
-(18, '2021-06-15 14:55:37', 'Alan! Alan!', 'https://www.youtube.com/watch?v=xaPepCVepCg&list=PLGy6F-Kml5BV4S0E8axqixqvVbL3hV27O&index=221', 2, 1, 'video', NULL, 1, 5, 15),
-(19, '2021-06-16 10:39:00', 'Alan! Alan!', 'https://www.youtube.com/watch?v=xaPepCVepCg&list=PLGy6F-Kml5BV4S0E8axqixqvVbL3hV27O&index=221', 1, 1, 'video', NULL, 1, 5, 15);
+(18, '2021-06-15 14:55:37', 'Alan! Alan!', 'https://www.youtube.com/watch?v=xaPepCVepCg&list=PLGy6F-Kml5BV4S0E8axqixqvVbL3hV27O&index=221', 3, 1, 'video', NULL, 1, 5, 15),
+(19, '2021-06-16 10:39:00', 'Alan! Alan!', 'https://www.youtube.com/watch?v=xaPepCVepCg&list=PLGy6F-Kml5BV4S0E8axqixqvVbL3hV27O&index=221', 1, 1, 'video', NULL, 1, 5, 15),
+(20, '2021-06-17 13:28:29', 'Snake Quote', 'Ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss', 0, 4, 'quote', 'Snake', 0, NULL, NULL),
+(21, '2021-06-17 13:33:24', 'Snake', 'https://cdn.mos.cms.futurecdn.net/fM5sEN6qJUbCESCNZvg56n-1200-80.jpg', 0, 4, 'photo', NULL, 0, NULL, NULL),
+(22, '2021-06-17 13:37:32', 'Test', 'This is a test', 0, 5, 'text', NULL, 0, NULL, NULL),
+(23, '2021-06-17 13:38:59', 'HELP', 'I am tired', 0, 5, 'text', NULL, 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -221,10 +235,10 @@ CREATE TABLE `subscriptions` (
 --
 
 INSERT INTO `subscriptions` (`user`, `subscriber`, `date_created`) VALUES
-(1, 3, '2021-06-15 12:44:51'),
 (5, 3, '2021-06-15 12:45:00'),
 (5, 1, '2021-06-15 14:47:30'),
-(3, 1, '2021-06-16 13:53:33');
+(3, 1, '2021-06-16 13:53:33'),
+(1, 3, '2021-06-17 10:16:32');
 
 -- --------------------------------------------------------
 
@@ -264,6 +278,7 @@ ALTER TABLE `comments`
   ADD UNIQUE KEY `id_UNIQUE` (`id`),
   ADD KEY `fk_Comments_Users1_idx` (`author`),
   ADD KEY `fk_Comments_Posts1_idx` (`post`);
+ALTER TABLE `comments` ADD FULLTEXT KEY `comments_ft_search` (`text`);
 
 --
 -- Индексы таблицы `content_type`
@@ -286,6 +301,7 @@ ALTER TABLE `dialogues`
 --
 ALTER TABLE `hashtags`
   ADD KEY `fk_Hashtags_Posts1_idx` (`post_id`);
+ALTER TABLE `hashtags` ADD FULLTEXT KEY `hastags_ft_search` (`hashtag`);
 
 --
 -- Индексы таблицы `likes`
@@ -312,6 +328,9 @@ ALTER TABLE `posts`
   ADD KEY `fk_Posts_Users_idx` (`author`),
   ADD KEY `fk_Posts_Users1_idx` (`original_author`),
   ADD KEY `fk_Posts_Content_type1_idx` (`content_type`);
+ALTER TABLE `posts` ADD FULLTEXT KEY `posts_ft_search` (`title`,`content_type`,`content`,`quote_author`);
+ALTER TABLE `posts` ADD FULLTEXT KEY `posts_ft_2` (`title`,`content`);
+ALTER TABLE `posts` ADD FULLTEXT KEY `posts_ft_3` (`title`);
 
 --
 -- Индексы таблицы `subscriptions`
@@ -328,6 +347,7 @@ ALTER TABLE `users`
   ADD UNIQUE KEY `Id_UNIQUE` (`id`),
   ADD UNIQUE KEY `username_UNIQUE` (`login`),
   ADD UNIQUE KEY `email_UNIQUE` (`email`);
+ALTER TABLE `users` ADD FULLTEXT KEY `users_ft_search` (`login`);
 
 --
 -- AUTO_INCREMENT для сохранённых таблиц
@@ -343,19 +363,19 @@ ALTER TABLE `comments`
 -- AUTO_INCREMENT для таблицы `dialogues`
 --
 ALTER TABLE `dialogues`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT для таблицы `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT для таблицы `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT для таблицы `users`

@@ -271,8 +271,8 @@ function dd($args){
 //для поиска в определенном ключе массива  типа [{"keyN"=>value}, {}, {}]
 //если она находит элемент, то возвращает индекс массива, в котром он находится
 function search_arr($arrname, $keyN, $value){
-
     foreach($arrname as $key=>$arr){
+        
         if($arr[$keyN] == $value){
             $res = $key;
             break;
